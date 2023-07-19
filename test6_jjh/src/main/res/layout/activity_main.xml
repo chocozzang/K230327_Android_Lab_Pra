@@ -44,31 +44,33 @@
         android:textSize="30sp"
         android:padding="20dp"/>
 
-    <TextView
-        android:id="@+id/textView"
-        android:fontFamily="@font/bmyeonseong"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="네이버 : www.naver.com, 이메일 : asdf@naver.com, 전화 : 010-3333-2222"
-        android:textSize="30sp"
-        android:autoLink="web|email|phone"/>
+<!--    <TextView-->
+<!--        android:id="@+id/textView"-->
+<!--        android:fontFamily="@font/bmyeonseong"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="네이버 : www.naver.com, 이메일 : asdf@naver.com, 전화 : 010-3333-2222"-->
+<!--        android:textSize="30sp"-->
+<!--        android:autoLink="web|email|phone"/>-->
 
     <!-- wrap_content : text의 크기를 기준으로 지정 -->
     <!-- match_parent : 부모의 크기를 기준으로 지정 -->
 
     <Button
+        android:id="@+id/joinBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button01"
+        android:text="회원가입"
         android:backgroundTint="#00BCD4"
         android:textColor="@color/black"
         android:textSize="30sp"
         android:padding="20dp"/>
 
     <Button
+        android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="회원가입"
+        android:text="로그인"
         android:backgroundTint="#00BCD4"
         android:textColor="@color/black"
         android:textSize="30sp"

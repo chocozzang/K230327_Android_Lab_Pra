@@ -1,5 +1,6 @@
 package com.example.test6_jjh
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         // 스위치를 위한 변수 -> 이미지를 보여주거나 안보여주는 경우
 
         var status : Int = 0
-        
+
         // savedInstanceState : Bundle : 임시 객체 (= Session)
         super.onCreate(savedInstanceState) // 화면을 그려줌
         // 레이아웃 샘플로 리니어 사용 중, 이유? 제약 조건 설정이 간단함
@@ -41,6 +42,12 @@ class MainActivity : AppCompatActivity() {
         // on/off 버튼을 별도로 두는 경우
         binding.btn2.setOnClickListener {
             binding.img1.visibility = View.VISIBLE
+        }
+        // 회원가입 버튼 클릭 시 회원가입 페이지로 이동
+        // 화면 전환 시 데이터를 가지고 이동함
+        binding.joinBtn.setOnClickListener {
+            val intent : Intent = Intent(this@MainActivity, JoinActivity::class.java)
+            startActivity(intent)
         }
     }
 }
