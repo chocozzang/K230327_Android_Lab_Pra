@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         // 체크박스 뷰, 버튼 뷰 설정.
         // 리스너 설정, 결과 확인.
         // 바인딩을 할 때
+
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         /* **체크 박스 이벤트**
@@ -42,9 +43,9 @@ class MainActivity : AppCompatActivity() {
 
         // **롱 클릭 이벤트**
         // 바인딩은 상단에 진행했음
-        binding.buttontest.setOnClickListener {
+        binding.buttontest?.setOnClickListener {
             Log.d(TAG, "ONCLICKLISTNER") }
-        binding.buttontest.setOnLongClickListener {
+        binding.buttontest?.setOnLongClickListener {
             Log.d(TAG, "ONLONGCLICKLISTNER")
             true}
 

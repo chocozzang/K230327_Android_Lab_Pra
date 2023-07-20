@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">test8_9_jjh</string>
+    <string name="app_main_title">Welcome To Mobile Project</string>
+    <string name="app_foot_title">Busan IT Academy</string>
+    <string name="app_foot_address">Busanjingu JoongangDaero 708 finance building 4th floor</string>
 </resources>
