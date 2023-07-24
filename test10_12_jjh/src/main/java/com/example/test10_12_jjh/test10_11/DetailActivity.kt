@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

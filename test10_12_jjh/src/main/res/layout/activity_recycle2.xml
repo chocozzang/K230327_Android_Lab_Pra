@@ -6,6 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="0dp"
     android:layout_weight="1"
-    tools:context=".RecycleActivity">
+    tools:context=".test10_11.RecycleActivity">
 
 </androidx.recyclerview.widget.RecyclerView>

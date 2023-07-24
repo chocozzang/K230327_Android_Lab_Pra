@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.databinding.ActivityJetBinding
 
 class JetActivity : AppCompatActivity() {

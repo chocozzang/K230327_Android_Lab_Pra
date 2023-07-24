@@ -14,40 +14,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
         <activity
-            android:name=".DrawerTestActivity"
+            android:name=".test12.MainActivity378"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ViewPager2_Fragment_Activity"
+            android:name=".test12.MainActivity"
             android:exported="false">
         </activity>
         <activity
-            android:name=".ViewPager2_Recycle_Activity"
+            android:name=".test10_11.DrawerTestActivity"
             android:exported="false"></activity>
         <activity
-            android:name=".Recycle2Activity"
+            android:name=".test10_11.ViewPager2_Fragment_Activity"
             android:exported="false" />
         <activity
-            android:name=".RecycleActivity"
+            android:name=".test10_11.ViewPager2_Recycle_Activity"
             android:exported="false" />
         <activity
-            android:name=".FragTestActivity"
+            android:name=".test10_11.Recycle2Activity"
             android:exported="false" />
         <activity
-            android:name=".JetActivity"
+            android:name=".test10_11.RecycleActivity"
             android:exported="false" />
         <activity
-            android:name=".DetailActivity"
+            android:name=".test10_11.FragTestActivity"
             android:exported="false" />
         <activity
-            android:name=".NotiActivity"
+            android:name=".test10_11.JetActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".test10_11.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".test10_11.NotiActivity"
+            android:exported="false" />
+        <activity
+            android:name=".test10_11.MainActivity"
             android:exported="false" />
     </application>
 

@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

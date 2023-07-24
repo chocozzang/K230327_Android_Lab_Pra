@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.databinding.ActivityViewPager2RecycleBinding
 import com.example.test10_12_jjh.databinding.Item354Binding
 

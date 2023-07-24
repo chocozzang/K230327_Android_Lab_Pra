@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.test10_12_jjh.databinding.ActivityViewPager2FragmentBinding
-import com.example.test10_12_jjh.databinding.ActivityViewPager2RecycleBinding
 import com.example.test10_12_jjh.fragment.OneFragment
 import com.example.test10_12_jjh.fragment.ThreeFragment
 import com.example.test10_12_jjh.fragment.TwoFragment

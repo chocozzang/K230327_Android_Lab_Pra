@@ -1,10 +1,8 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import android.app.DatePickerDialog
-import android.app.ProgressDialog.show
 import android.app.TimePickerDialog
 import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,10 +10,8 @@ import android.util.Log
 import android.widget.DatePicker
 import android.widget.TimePicker
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import com.example.test10_12_jjh.databinding.ActivityMainBinding
 import com.example.test10_12_jjh.databinding.DialogSampleBinding
 

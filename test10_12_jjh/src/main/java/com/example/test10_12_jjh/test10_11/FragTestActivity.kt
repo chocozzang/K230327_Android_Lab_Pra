@@ -1,11 +1,11 @@
-package com.example.test10_12_jjh
+package com.example.test10_12_jjh.test10_11
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.databinding.ActivityFragTestBinding
-import com.example.test10_12_jjh.fragment.OneFragment
 import com.example.test10_12_jjh.fragment.TwoFragment
 
 // 프래그먼트 출력을 위한 테스트 코드
