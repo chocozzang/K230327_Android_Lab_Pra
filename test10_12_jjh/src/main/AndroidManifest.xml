@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
         <activity
-            android:name=".JetActivity"
+            android:name=".DrawerTestActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,12 +22,30 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ViewPager2_Fragment_Activity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".ViewPager2_Recycle_Activity"
+            android:exported="false"></activity>
+        <activity
+            android:name=".Recycle2Activity"
+            android:exported="false" />
+        <activity
+            android:name=".RecycleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FragTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".JetActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetailActivity"
             android:exported="false" />
         <activity
             android:name=".NotiActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
