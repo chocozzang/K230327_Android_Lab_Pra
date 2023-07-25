@@ -9,6 +9,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
         <activity
+            android:name=".test13.SixthPracticeIntro"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".test13.SixthPractice"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".test13.SixthPracticeLogin"
+            android:exported="true">
+        </activity>
+        <activity
+            android:name=".test13.SixthPracticeRegister"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".test13.MainActivity426"
             android:exported="true"
             android:windowSoftInputMode="adjustResize"/>
@@ -18,11 +38,6 @@
         <activity
             android:name=".test13.MainActivity414"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".test13.MainActivity408"
