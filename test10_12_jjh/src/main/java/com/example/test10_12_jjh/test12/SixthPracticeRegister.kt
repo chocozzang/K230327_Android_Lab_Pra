@@ -30,9 +30,13 @@ class SixthPracticeRegister : AppCompatActivity() {
             }
         }
 
+//        binding.backmain.setOnClickListener {
+//            val intent : Intent = Intent(this@SixthPracticeRegister, SixthPractice::class.java)
+//            startActivity(intent)
+//        }
         binding.backmain.setOnClickListener {
-            val intent : Intent = Intent(this@SixthPracticeRegister, SixthPractice::class.java)
-            startActivity(intent)
+            setResult(RESULT_OK, intent)
+            finish()
         }
     }
 }

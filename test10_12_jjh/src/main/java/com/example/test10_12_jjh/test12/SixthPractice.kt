@@ -20,5 +20,10 @@ class SixthPractice : AppCompatActivity() {
             val intent : Intent = Intent(this@SixthPractice, SixthPracticeRegister::class.java)
             startActivity(intent)
         }
+
+        binding.back.setOnClickListener {
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 }

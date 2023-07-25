@@ -12,9 +12,14 @@ class SixthPracticeLogin : AppCompatActivity() {
         val binding = ActivitySixthPracticeLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        binding.backmain.setOnClickListener {
+//            val intent : Intent = Intent(this@SixthPracticeLogin, SixthPractice::class.java)
+//            startActivity(intent)
+//        }
+
         binding.backmain.setOnClickListener {
-            val intent : Intent = Intent(this@SixthPracticeLogin, SixthPractice::class.java)
-            startActivity(intent)
+            setResult(RESULT_OK, intent)
+            finish()
         }
 
         binding.loginBtn.setOnClickListener {

@@ -26,9 +26,7 @@ class DrawerTestActivity : AppCompatActivity() {
         // 2번째 뷰) 드로워 뷰 (사이드에서 메뉴 나오는 부분)
         //ActionBarDrawerToggle 버튼 적용
         toggle = ActionBarDrawerToggle(this, binding.drawer,
-            R.string.drawer_opened,
-            R.string.drawer_closed
-        )
+            R.string.drawer_opened, R.string.drawer_closed)
         // 액션바 토글부분을 연결해서 버튼을 클릭하면 드로워화면이 보임
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toggle.syncState()

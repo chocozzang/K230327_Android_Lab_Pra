@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:icon="@android:drawable/ic_menu_share"
+        android:icon="@android:drawable/ic_menu_info_details"
         android:id="@+id/mymain"
-        android:title="메인"/>
+        android:title="메인"
+        android:onClick="onNavigationItemSelected"/>
     <item
-        android:icon="@android:drawable/ic_menu_help"
+        android:icon="@android:drawable/ic_secure"
         android:id="@+id/mylogin"
-        android:title="로그인"/>
+        android:title="로그인"
+        android:onClick="onNavigationItemSelected"/>
+    <item
+        android:icon="@android:drawable/ic_input_add"
+        android:id="@+id/myregister"
+        android:title="회원가입"
+        android:onClick="onNavigationItemSelected"/>
+    <item
+        android:icon="@android:drawable/ic_menu_more"
+        android:id="@+id/mypage"
+        android:title="마이페이지"/>
     <item
         android:icon="@android:drawable/ic_menu_search"
-        android:id="@+id/myregister"
-        android:title="회원가입"/>
+        android:id="@+id/fishingChampion"
+        android:title="낚시대회"/>
+    <item
+        android:icon="@android:drawable/ic_menu_help"
+        android:id="@+id/fishingMaster"
+        android:title="낚시박사"/>
+    <item
+        android:icon="@android:drawable/ic_menu_help"
+        android:id="@+id/newbieGuide"
+        android:title="초보자가이드"/>
+    <item
+        android:icon="@android:drawable/ic_menu_share"
+        android:id="@+id/fishingCommunity"
+        android:title="커뮤니티"/>
+    <item
+        android:icon="@android:drawable/ic_menu_today"
+        android:id="@+id/fishingWeather"
+        android:title="날씨"/>
+    <item
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:id="@+id/fishingMap"
+        android:title="지도"/>
 
 </menu>
