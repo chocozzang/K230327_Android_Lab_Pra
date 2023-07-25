@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="242dp"
             app:contentScrim="?attr/colorPrimary"
-            app:expandedTitleMarginBottom="50dp"
+            app:expandedTitleMarginBottom="100dp"
             app:expandedTitleMarginStart="48dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:title="AppBar Title">

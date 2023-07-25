@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@android:drawable/ic_menu_share"
+        android:id="@+id/mymain"
+        android:title="메인"/>
+    <item
+        android:icon="@android:drawable/ic_menu_help"
+        android:id="@+id/mylogin"
+        android:title="로그인"/>
+    <item
+        android:icon="@android:drawable/ic_menu_search"
+        android:id="@+id/myregister"
+        android:title="회원가입"/>
+
+</menu>

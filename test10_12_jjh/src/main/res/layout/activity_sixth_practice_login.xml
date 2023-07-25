@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SixthPractice"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="450dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/myimg" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bmyeonseong"
+        android:text="로그인"
+        android:textSize="40dp"
+        android:textAlignment="center"/>
+
+    <EditText
+        android:id="@+id/id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bmyeonseong"
+        android:hint="아이디 입력"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bmyeonseong"
+        android:inputType="textPassword"
+        android:hint="비밀번호 입력" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/bmyeonseong"
+        android:text="로그인하기"
+        android:textSize="30dp"
+        android:backgroundTint="#00BCD4"/>
+
+    <Button
+        android:id="@+id/backmain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/bmyeonseong"
+        android:text="돌아가기"
+        android:textSize="30dp"
+        android:backgroundTint="#00BCD4"/>
+
+</LinearLayout>
