@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.test6_jjh.databinding.ActivitySixthPracticeLoginBinding
+import com.example.test10_12_jjh.databinding.ActivitySixthPracticeLoginBinding
 
 class SixthPracticeLogin : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

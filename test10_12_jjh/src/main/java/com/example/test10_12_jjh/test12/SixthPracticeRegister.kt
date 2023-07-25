@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import com.example.test6_jjh.databinding.ActivitySixthPracticeRegisterBinding
+import com.example.test10_12_jjh.databinding.ActivitySixthPracticeRegisterBinding
 
 class SixthPracticeRegister : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

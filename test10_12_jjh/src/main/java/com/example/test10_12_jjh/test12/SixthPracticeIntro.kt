@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import com.example.test10_12_jjh.R
 
 class SixthPracticeIntro : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

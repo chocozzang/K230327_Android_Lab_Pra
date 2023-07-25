@@ -14,6 +14,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
         <activity
+            android:name=".test12.SixthPracticeRegister"
+            android:exported="false" />
+        <activity
+            android:name=".test12.SixthPracticeLogin"
+            android:exported="false" />
+        <activity
+            android:name=".test12.SixthPracticeIntro"
+            android:exported="false" />
+        <activity
+            android:name=".test12.SixthPractice"
+            android:exported="false" />
+        <activity
             android:name=".test12.PracticeActivity"
             android:exported="true" />
         <activity
@@ -45,7 +57,7 @@
             android:exported="true" />
         <activity
             android:name=".test10_11.ViewPager2_Fragment_Activity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".test10_11.ViewPager2_Recycle_Activity"
             android:exported="false" />
