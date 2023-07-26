@@ -1,4 +1,4 @@
-package com.example.test10_12_jjh.test12
+package com.example.test13_16_17_18.test16
 
 import android.content.Intent
 import android.graphics.BitmapFactory
@@ -8,47 +8,51 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
-import com.example.test10_12_jjh.R
-import com.example.test10_12_jjh.databinding.ActivitySixthPracticeRegisterBinding
+import com.example.test13_16_17_18.R
+import com.example.test13_16_17_18.databinding.ActivityImageBinding
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 
-class SixthPracticeRegister : AppCompatActivity() {
-    lateinit var filePath : String
+// 코드 경로 :
+// https://github.com/lsy3709/AndroidLab/blob/master
+// /ch16_provider/src/main/java/com/example/ch16_provider/MainActivity.kt
+// 변경사항 : 바인딩 변경, ActivityImageBinding으로 변경
+// /values/dimen.xml : 사이즈 변경 부분에 res에서 사용하는 부분
+// 권한 설정 :
+// https://developer.android.com/about/versions/13/behavior-changes-13?hl=ko
+// 뷰 경로 :
+// https://github.com/lsy3709/AndroidLab/blob/master
+// /ch16_provider/src/main/res/layout/activity_main.xml
+
+// 갤러리와 카메라 연동 및 인텐트의 후처리 작업을 활용하여
+// 비트맵 또는 drawable 타입으로 이미지를 처리하는 부분
+// 주의사항) 미디어 서버에 접근하는 허가 부분이 조금 변경되어 이를 수정하고,
+// 콘텐츠 프로바이더의 authorities 부분 주의할 것
+// 내용은 그대로 사용하며, 코드 리뷰 시의 설명에서 확인
+
+// 임의의 프로필 사진 한 장 준비 교체
+// val photoURI: Uri = FileProvider.getUriForFile(
+class ImageActivity : AppCompatActivity() {
+    lateinit var binding: ActivityImageBinding
+    lateinit var filePath: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivitySixthPracticeRegisterBinding.inflate(layoutInflater)
+
+        binding = ActivityImageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.registerBtn.setOnClickListener {
-            val intent : Intent = Intent(this@SixthPracticeRegister, this@SixthPracticeRegister::class.java)
-            val intent2 : Intent = Intent(this@SixthPracticeRegister, SixthPracticeLogin::class.java)
-
-            val id   : String = binding.id.text.toString()
-            val pw1  : String = binding.password.text.toString()
-            val pw2  : String = binding.passwordcheck.text.toString()
-            val name : String = binding.name.text.toString()
-
-            if(pw1.equals(pw2)) {
-                Toast.makeText(this, "회원가입 완료! id : $id, pw : $pw1, name : $name", Toast.LENGTH_SHORT).show()
-                startActivity(intent2)
-            } else {
-                Toast.makeText(this, "비밀번호 확인이 다릅니다.", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
-            }
+        binding.mapButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("geo:" + "37.5662952, 126.9779451"))
+            startActivity(intent)
         }
 
-//        binding.backmain.setOnClickListener {
-//            val intent : Intent = Intent(this@SixthPracticeRegister, SixthPractice::class.java)
-//            startActivity(intent)
-//        }
-        binding.backmain.setOnClickListener {
-            setResult(RESULT_OK, intent)
-            finish()
+        binding.callButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("tel:01077778888"))
+            startActivity(intent)
         }
 
         //gallery request launcher..................
@@ -70,7 +74,9 @@ class SixthPracticeRegister : AppCompatActivity() {
                 inputStream = null
 
                 bitmap?.let {
+                    Log.d("test16", "결과 처리 전00")
                     binding.userImageView.setImageBitmap(bitmap)
+                    Log.d("test16", "결과 처리 후00")
                 } ?: let{
                     Log.d("test16", "bitmap null")
                 }
@@ -79,6 +85,7 @@ class SixthPracticeRegister : AppCompatActivity() {
             }
         }
 
+
         binding.galleryButton.setOnClickListener {
             //gallery app........................
             val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -86,6 +93,8 @@ class SixthPracticeRegister : AppCompatActivity() {
             requestGalleryLauncher.launch(intent)
         }
 
+        //camera request launcher.................
+        // 후처리 함수에서 작업을 진행
         val requestCameraFileLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()){
             // calRatio : 임의로 정한 변수,
@@ -109,15 +118,14 @@ class SixthPracticeRegister : AppCompatActivity() {
             option.inSampleSize = calRatio
             val bitmap = BitmapFactory.decodeFile(filePath, option)
             bitmap?.let {
-                Log.d("6th practice", "결과 처리 전")
+                Log.d("test16", "결과 처리 전")
                 binding.userImageView.setImageBitmap(bitmap)
-                Log.d("6th practice", "결과 처리 후")
+                Log.d("test16", "결과 처리 후")
             }
         }
 
         // 카메라 버튼
         binding.cameraButton.setOnClickListener {
-            Log.d("6th practice", "camera start")
             //camera app......................
             //파일 준비...............
             val timeStamp: String =
@@ -125,24 +133,24 @@ class SixthPracticeRegister : AppCompatActivity() {
             // 안드로이드 시스템에서 정하는 DIRECTORY_PICTURES가 정해져 있음
             val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
             // 실제 물리 파일을 준비함 "JPEG_${timeStamp}_"[ ].jpg
-            Log.d("6th practice", "camera file set")
             val file = File.createTempFile(
                 "JPEG_${timeStamp}_",
                 ".jpg",
                 storageDir
             )
+            Log.d("test16", "cameraxyz00")
             // 파일의 실제 경로
             filePath = file.absolutePath
             // 카메라에서 찍은 사진에 접근하기 위해서, 콘텐츠 프로바이더에 요청
             // 요청시, 매니페스트에서 정한 같은 문자열을 사용한다.
             // "com.example.test13_16_17_18.fileprovider"
-            Log.d("6th practice", "camera uri set")
+            Log.d("test16", "cameraxyz01")
             val photoURI: Uri = FileProvider.getUriForFile(
                 this,
-                "com.example.test10_12_jjh.fileprovider",
+                "com.example.test13_16_17_18.fileprovider",
                 file
             )
-            Log.d("6th practice", "camera uri set2")
+            Log.d("test16", "cameraxyz")
             // 현재 앱에서 외부 앱으로 가기 위해서 시스템으로 인텐트를 전달
             // 인텐트의 메시지 내용은, 액션의 문자열 카메라 앱
             // 데이터의 내용은 사진의 출력(카메라로 찍음), photoURI에 담기
@@ -150,8 +158,9 @@ class SixthPracticeRegister : AppCompatActivity() {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
             // 후처리 함수를 호출하면, 위에 정한 후처리 작업 함수로 이동
             // 카메라 촬영 후, 체크 하고 나서 되돌아올 때 작업을 상단의 함수에서 처리함.
-            Log.d("6th practice", "camera launch")
+            Log.d("test16", "cameraqwer")
             requestCameraFileLauncher.launch(intent)
+            Log.d("test16", "cameraasdf")
         }
     }
 
@@ -196,5 +205,4 @@ class SixthPracticeRegister : AppCompatActivity() {
         }
         return inSampleSize
     }
-
 }
