@@ -4,6 +4,7 @@
     <uses-feature
         android:name="android.hardware.telephony"
         android:required="false" />
+
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 권한 설정 -->
     <!--
  https://github.com/lsy3709/AndroidLab/blob
@@ -27,9 +28,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
         <activity
+            android:name=".test16multiimg.MainActivity5"
+            android:exported="true" />
+        <activity
             android:name=".test16.ImageActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <!--
          컨텐트 프로바이더 사용하기 위한 사전 작업
         1. authorities를 각자의 패키지 명으로 변경할 것
@@ -49,13 +52,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <activity
             android:name=".test13.MainActivity443"
             android:exported="true" />
         <activity
             android:name=".test13.SixthPracticeIntro"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".test13.SixthPractice"
             android:exported="true" />
@@ -95,6 +98,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
