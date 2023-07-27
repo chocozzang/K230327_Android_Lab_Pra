@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".test12.SixthPractice"
+    tools:context=".test12.SixthPracticeRegister"
     android:orientation="vertical"
     android:gravity="center">
 
@@ -82,6 +82,22 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/bmyeonseong"
         android:hint="이름 입력"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bmyeonseong"
+        android:hint="주소 입력"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bmyeonseong"
+        android:hint="전화번호 입력"
         android:inputType="text" />
 
     <Button

@@ -22,6 +22,7 @@ class MainActivity6 : AppCompatActivity() {
     // 전역으로 선언만 했지, 할당을 안했음.
     // 그래서, onCreate 라는 함수에서 , 최초 1회 실행시.
     // 할당을 하는 구조.
+    // JPA와 비슷한 역할을 함 - CRUD
     var myDB: DatabaseHelper? = null
 
     lateinit var binding: ActivityMain6Binding
@@ -37,12 +38,12 @@ class MainActivity6 : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-// 전역에 선언된 변수들을 할당하는 구조.
+        // 전역에 선언된 변수들을 할당하는 구조.
         binding = ActivityMain6Binding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        setContentView(R.layout.activity_main)
-        //DatabaseHelper 클래스 를 사용한다.
+        // setContentView(R.layout.activity_main)
+        // DatabaseHelper 클래스 를 사용한다.
         // 객체 생성한다. ->
         myDB = DatabaseHelper(this)
 
@@ -133,6 +134,7 @@ class MainActivity6 : AppCompatActivity() {
     fun UpdateData() {
         buttonUpdate!!.setOnClickListener {
             val isUpdated = myDB!!.updateData(
+                // 기존의 입력창과 수정창을 동시에 사용함
                 editTextID!!.text.toString(),
                 editTextName!!.text.toString(),
                 editTextPhone!!.text.toString(),

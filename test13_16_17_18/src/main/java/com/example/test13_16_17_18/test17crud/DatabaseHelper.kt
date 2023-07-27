@@ -25,7 +25,7 @@ class DatabaseHelper(context: Context?) : SQLiteOpenHelper
     }
     // 이 클래스 사용하면, 지정된 데이터베이스 파일에, 테이블이 생성이 됩니다.
     // 생성된 물리 경로 주소.
-    // 에뮬레이터 탐색기 -> data->data -> 패키지명:com.example.test17_crud
+    // 에뮬레이터 탐색기 -> data - >data -> 패키지명:com.example.test17_crud
     // -> databases , 파일명으로 있음.
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {

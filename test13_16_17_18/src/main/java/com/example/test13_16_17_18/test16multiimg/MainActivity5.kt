@@ -3,13 +3,14 @@ package com.example.test13_16_17_18.test16multiimg
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -58,6 +59,7 @@ class MainActivity5 : AppCompatActivity() {
                 }
                 for (i in 0 until count!!){
                     val imageUri = it.data!!.clipData?.getItemAt(i)?.uri
+                    Log.d("jjh uri", "uri : $imageUri")
                     if (imageUri != null) {
                         list.add(imageUri)
                     }

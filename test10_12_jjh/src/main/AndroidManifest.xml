@@ -9,20 +9,31 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_secuirty_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab"
-        android:networkSecurityConfig="@xml/network_secuirty_config"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".test12.SixthPracticeEdit"
+            android:exported="false" />
+        <activity
+            android:name=".test12.SixthPracticeMemInfo"
+            android:exported="false"
+            android:label="@string/title_activity_sixth_practice_mem_info" />
+        <activity
+            android:name=".test12.SixthPracticeMeminfo4"
+            android:exported="false" />
         <activity
             android:name=".test12.ApiTestActivity"
             android:exported="true" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.test10_12_jjh.fileprovider"
@@ -35,16 +46,16 @@
 
         <activity
             android:name=".test12.SixthPracticeRegister"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".test12.SixthPracticeLogin"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".test12.SixthPracticeIntro"
             android:exported="false" />
         <activity
             android:name=".test12.SixthPractice"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".test12.PracticeActivity"
             android:exported="true">
@@ -68,7 +79,7 @@
             android:exported="true" />
         <activity
             android:name=".test12.MainActivity378"
-            android:exported="true"></activity>
+            android:exported="true" />
         <activity
             android:name=".test12.MainActivity"
             android:exported="true" />

@@ -3,13 +3,13 @@ package com.example.test10_12_jjh.test12
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.databinding.ActivitySixthPracticeRegisterBinding
@@ -19,36 +19,67 @@ import java.util.Date
 
 class SixthPracticeRegister : AppCompatActivity() {
     lateinit var filePath : String
+    var myDB : DatabaseHelper? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        myDB = DatabaseHelper(this)
         val binding = ActivitySixthPracticeRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.registerBtn.setOnClickListener {
-            val intent : Intent = Intent(this@SixthPracticeRegister, this@SixthPracticeRegister::class.java)
-            val intent2 : Intent = Intent(this@SixthPracticeRegister, SixthPracticeLogin::class.java)
+//        binding.registerBtn.setOnClickListener {
+//            val intent : Intent = Intent(this@SixthPracticeRegister, this@SixthPracticeRegister::class.java)
+//            val intent2 : Intent = Intent(this@SixthPracticeRegister, SixthPracticeLogin::class.java)
+//
+//            val id   : String = binding.id.text.toString()
+//            val pw1  : String = binding.password.text.toString()
+//            val pw2  : String = binding.passwordcheck.text.toString()
+//            val name : String = binding.name.text.toString()
+//
+//            if(pw1.equals(pw2)) {
+//                Toast.makeText(this, "회원가입 완료! id : $id, pw : $pw1, name : $name", Toast.LENGTH_SHORT).show()
+//                startActivity(intent2)
+//            } else {
+//                Toast.makeText(this, "비밀번호 확인이 다릅니다.", Toast.LENGTH_SHORT).show()
+//                startActivity(intent)
+//            }
+//        }
 
-            val id   : String = binding.id.text.toString()
-            val pw1  : String = binding.password.text.toString()
-            val pw2  : String = binding.passwordcheck.text.toString()
-            val name : String = binding.name.text.toString()
+        AddMember()
 
-            if(pw1.equals(pw2)) {
-                Toast.makeText(this, "회원가입 완료! id : $id, pw : $pw1, name : $name", Toast.LENGTH_SHORT).show()
+    }
+
+    fun AddMember() {
+        val binding = ActivitySixthPracticeRegisterBinding.inflate(layoutInflater)
+        val intent : Intent = Intent(this@SixthPracticeRegister, SixthPracticeLogin::class.java)
+        val intent2 : Intent = Intent(this@SixthPracticeRegister, this@SixthPracticeRegister::class.java)
+
+        setContentView(binding.root)
+        binding.registerBtn!!.setOnClickListener {
+            if(binding.password.text.toString().equals(binding.passwordcheck.text.toString())) {
+                val isInserted = myDB!!.insertMember(
+                    binding.id!!.text.toString(),
+                    binding.password!!.text.toString(),
+                    binding.name!!.text.toString(),
+                    binding.address!!.text.toString(),
+                    binding.phone!!.text.toString()
+                )
+                if (isInserted == true) {
+                    Toast.makeText(this@SixthPracticeRegister, "회원가입 성공", Toast.LENGTH_SHORT).show()
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this@SixthPracticeRegister, "회원가입 실패", Toast.LENGTH_SHORT).show()
+                    startActivity(intent2)
+                }
+            }
+            else {
+                Toast.makeText(this@SixthPracticeRegister, "비밀번호가 달라요", Toast.LENGTH_SHORT).show()
                 startActivity(intent2)
-            } else {
-                Toast.makeText(this, "비밀번호 확인이 다릅니다.", Toast.LENGTH_SHORT).show()
-                startActivity(intent)
             }
         }
 
-//        binding.backmain.setOnClickListener {
-//            val intent : Intent = Intent(this@SixthPracticeRegister, SixthPractice::class.java)
-//            startActivity(intent)
-//        }
         binding.backmain.setOnClickListener {
-            setResult(RESULT_OK, intent)
-            finish()
+            val intent = Intent(this@SixthPracticeRegister, SixthPractice::class.java)
+            startActivity(intent)
         }
 
         //gallery request launcher..................
@@ -153,6 +184,7 @@ class SixthPracticeRegister : AppCompatActivity() {
             Log.d("6th practice", "camera launch")
             requestCameraFileLauncher.launch(intent)
         }
+
     }
 
     // 이미지 크기를 줄이는 로직

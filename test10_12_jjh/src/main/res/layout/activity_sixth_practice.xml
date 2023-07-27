@@ -36,6 +36,17 @@
         android:backgroundTint="#00BCD4"/>
 
     <Button
+        android:id="@+id/memberlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/bmyeonseong"
+        android:text="멤버목록 조회"
+        android:textSize="30dp"
+        android:backgroundTint="#00BCD4"/>
+
+    <Button
         android:id="@+id/back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -3,12 +3,12 @@ package com.example.test13_16_17_18.test16
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.example.test13_16_17_18.R
 import com.example.test13_16_17_18.databinding.ActivityImageBinding
@@ -132,6 +132,7 @@ class ImageActivity : AppCompatActivity() {
                 SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
             // 안드로이드 시스템에서 정하는 DIRECTORY_PICTURES가 정해져 있음
             val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+            Log.d("jjh store", "$storageDir")
             // 실제 물리 파일을 준비함 "JPEG_${timeStamp}_"[ ].jpg
             val file = File.createTempFile(
                 "JPEG_${timeStamp}_",
@@ -141,6 +142,8 @@ class ImageActivity : AppCompatActivity() {
             Log.d("test16", "cameraxyz00")
             // 파일의 실제 경로
             filePath = file.absolutePath
+            Log.d("jjh store", "$filePath")
+
             // 카메라에서 찍은 사진에 접근하기 위해서, 콘텐츠 프로바이더에 요청
             // 요청시, 매니페스트에서 정한 같은 문자열을 사용한다.
             // "com.example.test13_16_17_18.fileprovider"
@@ -177,14 +180,16 @@ class ImageActivity : AppCompatActivity() {
             // 실제 원본 사진의 물리 경로에 접근해서 바이트로 읽고
             // 사진을 읽은 바이트 단위
             var inputStream = contentResolver.openInputStream(fileUri)
-
             //inJustDecodeBounds 값을 true 로 설정한 상태에서 decodeXXX() 를 호출.
-            //로딩 하고자 하는 이미지의 각종 정보가 options 에 설정 된다.
+            //로딩 하고자 하는 이미지의 각종 정보가 options 에 설정 된다. 단위) bitmap
             BitmapFactory.decodeStream(inputStream, null, options)
             // 읽었던 원본의 사진의 메모리 사용을 반납하고,
             // 다시 해당 객체에 할당을 해제함 (null)
             inputStream!!.close()
             inputStream = null
+            // 사진 : 바이트로 읽음 -> InputStream -> DecodeStream -> Bitmap -> View
+            // 이미지, 영상 관련 인코딩 깃 주소 :
+            //
         } catch (e: Exception) {
             e.printStackTrace()
         }
