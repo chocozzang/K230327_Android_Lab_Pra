@@ -19,14 +19,27 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".test18reqres.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab">
+        <activity
+            android:name=".test18reqres.MainActivity9"
+            android:exported="true" />
+        <activity
+            android:name=".test18reqres.MainActivity8"
+            android:exported="true" />
+        <activity
+            android:name=".test18.MainActivity581"
+            android:exported="true" />
         <activity
             android:name=".test17sharedpreference.DetailActivity2"
             android:exported="true" />
