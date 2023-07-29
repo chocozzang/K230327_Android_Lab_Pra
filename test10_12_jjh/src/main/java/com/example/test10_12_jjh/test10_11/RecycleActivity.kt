@@ -29,7 +29,7 @@ class RecycleActivity : AppCompatActivity() {
 
         // 임시 데이터
         val datas = mutableListOf<String>()
-        for(i in 1..9){
+        for(i in 1..20){
             datas.add("Item $i")
         }
 
@@ -40,17 +40,14 @@ class RecycleActivity : AppCompatActivity() {
         // 보통 리니어 세로 / 가로 방향으로 출력하고,
         // 표 형식, 지그재그로 표현 옵션이 있음
         // 구현 옵션만 변형하여 확인
-        val layoutManager = LinearLayoutManager(this)
-        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
 
         // 만들어둔 리사이클러 뷰를 현재 액티비티에 적용
-
         // 기존 코드
         // binding.recyclerView.layoutManager = LinearLayoutManager(this)
-
         // 변경 코드
+        val layoutManager = LinearLayoutManager(this)
+        layoutManager.orientation = LinearLayoutManager.HORIZONTAL
         binding.recyclerView.layoutManager = layoutManager
-
         // 리사이클러 뷰의 어댑터를 커스텀한 어댑터와 연결
         // 뷰의 데이터를 변경함
         binding.recyclerView.adapter = MyAdapter(datas)

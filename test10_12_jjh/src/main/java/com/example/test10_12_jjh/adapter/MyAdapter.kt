@@ -52,6 +52,6 @@ class MyAdapter(val datas: MutableList<String>): RecyclerView.Adapter<RecyclerVi
 
         // 목록에 데이터를 임의로 받아오는 부분이 아니라, 기존 데이터에 추가 및 수정 시에
         // 반영이 되지 않는 경우가 있음. 그럴 때 사용하는 함수.
-        //notifyDataSetChanged()
+        // notifyDataSetChanged()
     }
 }
