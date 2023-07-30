@@ -1,7 +1,7 @@
 package com.example.test10_12_jjh.test10_11
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.test10_12_jjh.adapter.MyAdapter
@@ -23,6 +23,7 @@ class RecycleActivity : AppCompatActivity() {
         // 순서 - 구성요소        
         // 1) 뷰 홀더 생성 - MyViewHolder
         // 2) 어댑터 설정  - MyAdapter
+        // cf. 기존 코드는 클래스 하단에 넣었지만, 이번 연습에서는 별도의 파일로 생성하였음
         // ** 뷰와 어댑터를 분리함 **
         // 3) 설정한 리사이클러 뷰를 메인(RecycleActivity)에 적용
         // 4) 임시 데이터를 사용할 것임(리스트), 보통 공공 데이터 등 디비에서 받아온 데이터를 사용

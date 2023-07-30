@@ -18,6 +18,7 @@ import com.example.test10_12_jjh.databinding.Item342Binding
 // 뷰 -> 자동으로 뷰 바인딩이 동작해서 Item342Binding 파일을 메모리에 생성
 
 // 뷰 홀더 매개변수 - 목록의 구성요소(아이템)
+// 리사이클러 뷰를 매개변수로 사용함
 class MyViewHolder(val binding: Item342Binding): RecyclerView.ViewHolder(binding.root)
 
 // 어댑터 매개변수 - 현재는 임시 데이터(액티비티에서 생성함)이지만,

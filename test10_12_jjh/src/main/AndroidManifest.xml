@@ -22,7 +22,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".test12.SixthPracticeRecycle"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".test12.SixthPracticeEdit"
             android:exported="false" />
