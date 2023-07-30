@@ -16,7 +16,7 @@ class ViewPager2_Recycle_Activity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_view_pager2_recycle)
+        //setContentView(R.layout.activity_view_pager2_recycle)
 
         // 샘플코드 경로 :
         // https://github.com/lsy3709/AndroidLab/blob/master
