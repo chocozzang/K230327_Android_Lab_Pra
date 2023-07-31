@@ -29,13 +29,28 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?) : Recycler
         val binding = (holder as APIViewHolder).binding
         val tide = datas?.get(position)
         binding.practiceItem.text = "측정위치 : "+ tide?.result?.meta?.postid + " - " + tide?.result?.meta?.postname
-        binding.practiceItemDetail.text = """
-            날짜 : ${tide?.result?.data?.get(0)?.tidetime?.substring(0, 11)}
-            만조 시간 1 : ${tide?.result?.data?.get(0)?.tidetime?.substring(11)}
-            간조 시간 1 : ${tide?.result?.data?.get(1)?.tidetime?.substring(11)}
-            만조 시간 2 : ${tide?.result?.data?.get(2)?.tidetime?.substring(11)}
-            간조 시간 2 : ${tide?.result?.data?.get(3)?.tidetime?.substring(11)}           
-        """.trimIndent()
+        val tidetimes = tide?.result?.data
+        var tempStr : String = ""
+        if(tidetimes?.size!! == 0) {
+            tempStr.plus("조석 정보 없음")
+        }
+        else {
+            Log.d("apitest", "$position")
+            tempStr += "날짜 : ${tidetimes?.get(0)?.tidetime?.substring(0, 11)}"
+            var highcnt = 0
+            var lowcnt  = 0
+            for (i in 0 until tidetimes?.size!!) {
+                if (tidetimes?.get(i)?.tidetype.equals("고조")) {
+                    tempStr += "\n만조 시간 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)}"
+                    highcnt++
+                } else {
+                    tempStr += "\n간조 시간 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)}"
+                    lowcnt++
+                }
+            }
+        }
+        Log.d("apitest", tempStr)
+        binding.practiceItemDetail.text = tempStr
         binding.practiceRoot.setOnClickListener { 
             // 보통 상세페이지와의 연결
         }
