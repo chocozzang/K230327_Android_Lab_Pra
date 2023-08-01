@@ -44,7 +44,8 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
 
     // A default location (Sydney, Australia) and default zoom to use when location permission is
     // not granted.
-    private val defaultLocation = LatLng(-33.8523341, 151.2106085)
+    //private val defaultLocation = LatLng(-33.8523341, 151.2106085)
+    private val defaultLocation = LatLng(35.2100, 129.0689)
     private var locationPermissionGranted = false
 
     // The geographical location where the device is currently located. That is, the last-known
@@ -87,6 +88,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         mapFragment?.getMapAsync(this)
         // [END maps_current_place_map_fragment]
         // [END_EXCLUDE]
+
     }
     // [END maps_current_place_on_create]
 
@@ -131,6 +133,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
      */
+
     // [START maps_current_place_on_map_ready]
     override fun onMapReady(map: GoogleMap) {
         this.map = map
@@ -166,6 +169,49 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
+
+        data class MapLocation (
+            var obscode : String,
+            var obsname : String,
+            var latitude : Double,
+            var longtitude : Double)
+
+        var locations = listOf(
+            MapLocation("DT_0054", "진해", 35.147, 128.643),
+            MapLocation("DT_0004", "제주", 33.527, 126.543),
+            MapLocation("DT_0005", "부산", 35.096, 129.035),
+            MapLocation("DT_0007", "목포", 34.779, 126.375),
+            MapLocation("DT_0012", "속초", 38.207, 128.594),
+            MapLocation("DT_0016", "여수", 34.747, 127.765),
+            MapLocation("DT_0027", "완도", 34.315, 126.759),
+            MapLocation("DT_0028", "진도", 34.377, 126.308),
+            MapLocation("DT_0029", "거제도", 34.801, 128.699),
+            MapLocation("DT_0031", "거문도", 34.028, 127.308),
+            MapLocation("DT_0035", "흑산도", 34.684, 125.435),
+            MapLocation("DT_0050", "태안", 36.913, 126.238),
+            MapLocation("DT_0056", "부산항 신항", 35.077, 128.768)
+
+        )
+
+        val markers = mutableListOf<Marker>()
+
+        locations.forEach {
+            val marker = map?.addMarker(
+                MarkerOptions()
+                    .title(it.obsname)
+                    .position(LatLng(it.latitude, it.longtitude)))
+            markers.add(marker!!)
+        }
+
+        map.setOnCameraIdleListener {
+            for(marker in markers) {
+                if(map.projection.visibleRegion.latLngBounds.contains(marker.position))
+                    marker.showInfoWindow()
+                else
+                    marker.hideInfoWindow()
+            }
+        }
+
     }
     // [END maps_current_place_on_map_ready]
 
