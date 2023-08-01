@@ -84,9 +84,9 @@ class PracticeActivity : AppCompatActivity() {
         // onOptionsItemSelected에서 각 id에 대한 기능을 구현함
         Log.d("practice", "selected")
         when(item.itemId) {
-            R.id.mymain -> {
-                Log.d("practice", "mymain here")
-                val intent = Intent(this@PracticeActivity, SixthPractice::class.java)
+            R.id.joseokYebo -> {
+                Log.d("practice", "joseokYebo here")
+                val intent = Intent(this@PracticeActivity, SixthPracticeRecycle::class.java)
                 startActivity(intent)
             }
             R.id.mylogin -> {
