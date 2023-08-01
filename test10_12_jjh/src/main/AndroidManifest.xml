@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".test12.APIApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,8 +20,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab"
-        android:usesCleartextTraffic="true"
-        android:name=".test12.APIApplication">
+        android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${MAPS_API_KEY}" />
+
+        <activity
+            android:name=".test12.SixPracticeGoogleMap"
+            android:exported="true" />
         <activity
             android:name=".test12.SixthPracticeRecycle"
             android:exported="true" />

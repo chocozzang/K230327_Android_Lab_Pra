@@ -16,6 +16,11 @@
         android:title="회원가입"
         android:onClick="onNavigationItemSelected"/>
     <item
+        android:icon="@android:drawable/ic_menu_mapmode"
+        android:id="@+id/fishingMap"
+        android:title="지도"
+        android:onClick="onNavigationItemSelected"/>
+    <item
         android:icon="@android:drawable/ic_menu_more"
         android:id="@+id/mypage"
         android:title="마이페이지"/>
@@ -39,9 +44,6 @@
         android:icon="@android:drawable/ic_menu_today"
         android:id="@+id/fishingWeather"
         android:title="날씨"/>
-    <item
-        android:icon="@android:drawable/ic_menu_mapmode"
-        android:id="@+id/fishingMap"
-        android:title="지도"/>
+
 
 </menu>

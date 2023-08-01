@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.recyclerview.widget.RecyclerView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/myrecyclerView"
     android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:layout_weight="1">
-</androidx.recyclerview.widget.RecyclerView>
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".test12.SixthPracticeRecycle"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Spinner
+            android:id="@+id/spinnerDropdown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:entries="@array/dropdown_items" />
+
+        <Button
+            android:id="@+id/btnClickMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="조석예보 출력" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/myrecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

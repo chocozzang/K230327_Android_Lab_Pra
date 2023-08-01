@@ -1,14 +1,12 @@
 package com.example.test10_12_jjh.test12
 
-import android.content.ClipData
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -66,7 +64,6 @@ class PracticeActivity : AppCompatActivity() {
         Log.d("practice", "create")
         menuInflater.inflate(R.menu.menu_main, menu)
         menuInflater.inflate(R.menu.menu_mynavi, menu)
-
         //return true
         return super.onCreateOptionsMenu(menu)
     }
@@ -98,6 +95,12 @@ class PracticeActivity : AppCompatActivity() {
                 Log.d("practice", "myregister here")
                 val intent = Intent(this@PracticeActivity, SixthPracticeRegister::class.java)
                 startActivity(intent)
+            }
+            R.id.fishingMap -> {
+                Log.d("practice", "fishingmap here")
+                val intent = Intent(this@PracticeActivity, SixPracticeGoogleMap::class.java)
+                startActivity(intent)
+
             }
         }
     }

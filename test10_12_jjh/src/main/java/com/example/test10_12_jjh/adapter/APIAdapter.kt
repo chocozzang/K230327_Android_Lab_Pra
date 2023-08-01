@@ -41,10 +41,10 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?) : Recycler
             var lowcnt  = 0
             for (i in 0 until tidetimes?.size!!) {
                 if (tidetimes?.get(i)?.tidetype.equals("고조")) {
-                    tempStr += "\n만조 시간 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)}"
+                    tempStr += "\n만조 시간 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     highcnt++
                 } else {
-                    tempStr += "\n간조 시간 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)}"
+                    tempStr += "\n간조 시간 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     lowcnt++
                 }
             }
