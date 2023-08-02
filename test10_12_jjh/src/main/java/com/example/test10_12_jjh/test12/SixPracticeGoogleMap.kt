@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.test10_12_jjh.R
-import com.example.test10_12_jjh.adapter.APIAdapter
+import com.example.test10_12_jjh.model.TempModel
 import com.example.test10_12_jjh.model.TideModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -209,8 +209,8 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
             val marker = map?.addMarker(
                 MarkerOptions()
                     .title(it.obsname)
-                    .position(LatLng(it.latitude, it.longtitude))
-                    .snippet(it.obscode))
+                    .position(LatLng(it.latitude, it.longtitude)))
+            marker?.tag = it
             markers.add(marker!!)
         }
 
@@ -236,7 +236,6 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         Log.d("google", marker.title!!)
         Log.d("google", marker.position.latitude.toString())
         Log.d("google", marker.position.longitude.toString())
-        Log.d("google", marker.snippet!!)
 
         val apikey = "/FFdZti8UpV2Ku/EnEYvg=="
         //val obscode = "DT_0001"
@@ -246,8 +245,9 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
 
         val networkService = (applicationContext as APIApplication).networkService
         val tidelist = mutableListOf<TideModel>()
-        val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
+        //val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
         val mytide1 = networkService.getTide(apikey, marker.snippet!!, firstDay, resulttype)
+        val mytemp1 = networkService.getTemp(apikey, marker.snippet!!, firstDay, resulttype)
 
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
@@ -257,7 +257,20 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                 Log.d("google", "$tide")
             }
             override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                Log.d("apitest", "failed")
+                Log.d("google", "failed")
+                call.cancel()
+            }
+        })
+
+        mytemp1.enqueue(object : Callback<TempModel> {
+            override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
+                //tidelist.clear()
+                val temp = response.body()
+                //tidelist.add(tide!!)
+                Log.d("google", "$temp")
+            }
+            override fun onFailure(call: Call<TempModel>, t: Throwable) {
+                Log.d("google", "failed")
                 call.cancel()
             }
         })
