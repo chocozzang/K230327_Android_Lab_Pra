@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!--33버전 이후로는 세분화된 권한으로 변경 -> 추가 퍼미션을 넣어야함-->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!--앱이 실행되는 시점에서, 자주 사용하는 파이어베이스 관련 객체, 인증, 스토어, 스토리지를 미리 메모리상에 올려두고 사용하는 방법-->
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.K230327_Android_Lab">
+        <!--클라우드 메세지 (FCM : Firebase Cloud Messaging), 알림 기능 구현할 때 사용할 예정임.-->
+        <!--데이팅 앱에서, 서로 매칭이 되면, 알림 보내는 기능 하나만 가져와서 소개할 예정임-->
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_icon"
+            android:resource="@drawable/ic_stat_ic_notification"/>
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_color"
+            android:resource="@color/colorAccent"/>
+        <meta-data
+            android:name="com.google.firebase.message.default_notification_channel_id"
+            android:value="fcm_default_channel"/>
+        <!--백그라운드에서 실행되는 컴포넌트이고, 앱이 시작하고 있을 때를 포그라운드,
+            앱이 잠시 뒤에 있을 때를 백그라운드 상황이라고 함.
+            FCM은 앱이 백그라운드 상황이라고 해도 알림을 받을 수 있는 로직이 필요한데, 이를 서비스라고함-->
+        <!--기본 구성 : 채널, 토큰, 메세지(데이터) 구성해서, FCM서버를 통해 상대방에게 메세지를 전달하는 기능을 구현할 수 있음-->
+        <service
+            android:name=".MyFirebaseMessageService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".AuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <!--입력창의 소프트 키보드를 사용하는 경우, 화면이 잘리는 현상을 방지하기 위해
+            사이즈를 조절해주는 역할을 함-->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
