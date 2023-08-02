@@ -50,13 +50,16 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult())
         {
             try {
+
                 val calRatio = calculateInSampleSize(
                     it.data!!.data!!,
-                    resources.getDimensionPixelSize(com.example.test10_12_jjh.R.dimen.imgSize),
-                    resources.getDimensionPixelSize(com.example.test10_12_jjh.R.dimen.imgSize)
+                    //resources.getDimensionPixelSize(com.example.test10_12_jjh.R.dimen.imgSize),
+                    //resources.getDimensionPixelSize(com.example.test10_12_jjh.R.dimen.imgSize)
+                    224, 224
                 )
                 val option = BitmapFactory.Options()
                 option.inSampleSize = calRatio
+                //option.inSampleSize = imageSize
 
                 var inputStream = contentResolver.openInputStream(it.data!!.data!!)
                 val bitmap = BitmapFactory.decodeStream(inputStream, null, option)
@@ -64,7 +67,7 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
                 inputStream = null
                 Log.d("test16", "image convert start")
                 bitmap?.let {
-                    binding.imageView.setImageBitmap(bitmap)
+                    //binding.imageView.setImageBitmap(bitmap)
                     classifyImage(bitmap)
                 } ?: let{
                     Log.d("test16", "bitmap null")
@@ -107,8 +110,8 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
             Log.d("test16", "Classify2")
             // get 1D array of 224 * 224 pixels in image
             val intValues = IntArray(imageSize * imageSize)
-            Log.d("test16", "Classify2-1")
-            //image!!.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
+            //for(x in intValues) Log.d("test16", "$x\n")
+            image!!.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
             Log.d("test16", "Classify3")
             // iterate over pixels and extract R, G, and B values. Add to bytebuffer.
             var pixel = 0
@@ -144,6 +147,7 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
             }
             confidence!!.text = s
             Log.d("test16", "$s")
+            binding.imageView.setImageBitmap(image)
             // Releases model resources if no longer used.
             model.close()
         } catch (e: IOException) {

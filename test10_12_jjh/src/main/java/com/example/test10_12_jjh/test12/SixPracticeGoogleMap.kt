@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -12,11 +13,14 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.test10_12_jjh.R
+import com.example.test10_12_jjh.adapter.APIAdapter
+import com.example.test10_12_jjh.model.TideModel
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,6 +35,11 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
@@ -135,6 +144,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
      */
 
     // [START maps_current_place_on_map_ready]
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onMapReady(map: GoogleMap) {
         this.map = map
         // [START_EXCLUDE]
@@ -199,7 +209,8 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
             val marker = map?.addMarker(
                 MarkerOptions()
                     .title(it.obsname)
-                    .position(LatLng(it.latitude, it.longtitude)))
+                    .position(LatLng(it.latitude, it.longtitude))
+                    .snippet(it.obscode))
             markers.add(marker!!)
         }
 
@@ -212,8 +223,46 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+        map.setOnMarkerClickListener {
+            clickedMarker -> showMarkerInfo(clickedMarker)
+            true
+        }
+
     }
     // [END maps_current_place_on_map_ready]
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun showMarkerInfo(marker : Marker) {
+        Log.d("google", marker.title!!)
+        Log.d("google", marker.position.latitude.toString())
+        Log.d("google", marker.position.longitude.toString())
+        Log.d("google", marker.snippet!!)
+
+        val apikey = "/FFdZti8UpV2Ku/EnEYvg=="
+        //val obscode = "DT_0001"
+        val resulttype = "json"
+        val today = LocalDateTime.now()
+        val firstDay = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+
+        val networkService = (applicationContext as APIApplication).networkService
+        val tidelist = mutableListOf<TideModel>()
+        val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
+        val mytide1 = networkService.getTide(apikey, marker.snippet!!, firstDay, resulttype)
+
+        mytide1.enqueue(object : Callback<TideModel> {
+            override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
+                tidelist.clear()
+                val tide = response.body()
+                tidelist.add(tide!!)
+                Log.d("google", "$tide")
+            }
+            override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                Log.d("apitest", "failed")
+                call.cancel()
+            }
+        })
+
+    }
 
     /**
      * Gets the current location of the device, and positions the map's camera.
