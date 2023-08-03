@@ -2,18 +2,15 @@ package com.example.test10_12_jjh.test12
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -21,7 +18,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.test10_12_jjh.R
+import com.example.test10_12_jjh.adapter.APIAdapter
 import com.example.test10_12_jjh.model.TempModel
 import com.example.test10_12_jjh.model.TideModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -75,16 +76,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         var latitude : Double,
         var longtitude : Double)
 
-    private fun onSlideUpDialog() {
-        var contentView: View = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.popup_slideup, null)
-        val slideupPopup = SlideUpDialog.Builder(this)
-            .setContentView(contentView)
-            .create()
-        slideupPopup.show()
-        contentView.findViewById<Button>(R.id.close).setOnClickListener {
-            slideupPopup.dismissAnim()
-        }
-    }
+
 
     // [START maps_current_place_on_create]
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -265,12 +257,12 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val sixthDay = today.plusDays(5L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
+
         val networkService = (applicationContext as APIApplication).networkService
         val tidelist = mutableListOf<TideModel>()
         //val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
         //Log.d("google22", marker?.tag.toString())
         val mytag : MapLocation = (marker?.tag!! as MapLocation)
-        //marker?.tag?.
         val mytide1 = networkService.getTide(apikey, mytag.obscode, firstDay, resulttype)
         val mytide2 = networkService.getTide(apikey, mytag.obscode, secondDay, resulttype)
         val mytide3 = networkService.getTide(apikey, mytag.obscode, thirdDay, resulttype)
@@ -279,6 +271,8 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val mytide6 = networkService.getTide(apikey, mytag.obscode, sixthDay, resulttype)
         val mytide7 = networkService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
         val mytemp1 = networkService.getTemp(apikey, mytag.obscode, resulttype)
+
+        val myadapter = APIAdapter(GoogleMapBottomSheetDialogFragment().context!!, tidelist)
 
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
@@ -319,16 +313,6 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                 tidelist.add(tide!!)
                                                                 Log.d("google22", "mytide7")
                                                                 Log.d("google22", "$tidelist")
-                                                                //val layoutManager = LinearLayoutManager(this@SixthPracticeGoogleMap)
-                                                                //myadapter.notifyDataSetChanged()
-                                                                //layoutManager.orientation = LinearLayoutManager.VERTICAL
-                                                                //binding.myrecyclerView.layoutManager = layoutManager
-                                                                //binding.myrecyclerView.addItemDecoration(
-                                                                //    DividerItemDecoration(
-                                                                //        this@SixthPracticeGoogleMap, LinearLayoutManager.VERTICAL
-                                                                //    )
-                                                                //)
-                                                                //binding.myrecyclerView.adapter = myadapter
                                                                 mytemp1.enqueue(object : Callback<TempModel> {
                                                                     override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
                                                                         //tidelist.clear()
@@ -338,7 +322,20 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                         var s = ""
                                                                         s += tidelist.toString()
                                                                         s += temp.toString()
-                                                                        onSlideUpDialog()
+                                                                        val binding = findViewById<RecyclerView>(R.id.myrecyclerView)
+                                                                        val bottomsheetdialog = BottomSheetDialog()
+                                                                        bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
+                                                                        val context = GoogleMapBottomSheetDialogFragment().context
+                                                                        val linearLayoutManager = LinearLayoutManager(context)
+                                                                        myadapter.notifyDataSetChanged()
+                                                                        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+                                                                        binding.layoutManager = linearLayoutManager
+                                                                        binding.addItemDecoration(
+                                                                            DividerItemDecoration(
+                                                                                context, LinearLayoutManager.VERTICAL
+                                                                            )
+                                                                        )
+                                                                        binding.adapter = myadapter
                                                                     }
                                                                     override fun onFailure(call: Call<TempModel>, t: Throwable) {
                                                                         Log.d("google22", "failed")

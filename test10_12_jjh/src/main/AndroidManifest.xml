@@ -26,9 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.K230327_Android_Lab"
         android:usesCleartextTraffic="true">
-        <activity
-            android:name=".test12.SlidingUpDialog"
-            android:exported="false" />
+
         <activity
             android:name=".test12.GoogleMapBottomSheetDialogFragment"
             android:exported="false" />

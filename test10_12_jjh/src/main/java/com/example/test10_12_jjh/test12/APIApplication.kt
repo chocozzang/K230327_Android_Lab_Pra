@@ -27,6 +27,4 @@ class APIApplication : Application(){
         networkService2 = retrofit2.create(NetworkService::class.java)
     }
 
-
-
 }

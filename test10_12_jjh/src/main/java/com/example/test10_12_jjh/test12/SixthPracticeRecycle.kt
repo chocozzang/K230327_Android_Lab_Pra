@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.adapter.APIAdapter
@@ -115,18 +117,16 @@ class SixthPracticeRecycle : AppCompatActivity() {
                                                                     val tide = response.body()
                                                                     tidelist.add(tide!!)
                                                                     Log.d("apitest", "mytide7")
-                                                                    //val layoutManager = LinearLayoutManager(this@SixthPracticeRecycle)
-                                                                    //myadapter.notifyDataSetChanged()
-                                                                    //layoutManager.orientation = LinearLayoutManager.VERTICAL
-                                                                    //binding.myrecyclerView.layoutManager = layoutManager
-                                                                    //binding.myrecyclerView.addItemDecoration(
-                                                                    //    DividerItemDecoration(
-                                                                    //        this@SixthPracticeRecycle, LinearLayoutManager.VERTICAL
-                                                                    //    )
-                                                                    //)
-                                                                    //binding.myrecyclerView.adapter = myadapter
-                                                                    //mytemp1.enqueue
-                                                                    //findViewById<TextView>(R.id.bottom_text).text = "$temp : ${tidelist.toString()}"
+                                                                    val layoutManager = LinearLayoutManager(this@SixthPracticeRecycle)
+                                                                    myadapter.notifyDataSetChanged()
+                                                                    layoutManager.orientation = LinearLayoutManager.VERTICAL
+                                                                    binding.myrecyclerView.layoutManager = layoutManager
+                                                                    binding.myrecyclerView.addItemDecoration(
+                                                                        DividerItemDecoration(
+                                                                            this@SixthPracticeRecycle, LinearLayoutManager.VERTICAL
+                                                                        )
+                                                                    )
+                                                                    binding.myrecyclerView.adapter = myadapter
                                                                 }
                                                                 override fun onFailure(call: Call<TideModel>, t: Throwable) {
                                                                     Log.d("apitest", "failed")
