@@ -2,15 +2,18 @@ package com.example.test10_12_jjh.test12
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -41,9 +44,10 @@ import retrofit2.Response
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
+class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
+    //lateinit var binding : ActivitySixthPracticeGoogleMapBinding
 
     // The entry point to the Places API.
     private lateinit var placesClient: PlacesClient
@@ -65,10 +69,27 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     private var likelyPlaceAttributions: Array<List<*>?> = arrayOfNulls(0)
     private var likelyPlaceLatLngs: Array<LatLng?> = arrayOfNulls(0)
 
+    data class MapLocation (
+        var obscode : String,
+        var obsname : String,
+        var latitude : Double,
+        var longtitude : Double)
+
+    private fun onSlideUpDialog() {
+        var contentView: View = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.popup_slideup, null)
+        val slideupPopup = SlideUpDialog.Builder(this)
+            .setContentView(contentView)
+            .create()
+        slideupPopup.show()
+        contentView.findViewById<Button>(R.id.close).setOnClickListener {
+            slideupPopup.dismissAnim()
+        }
+    }
+
     // [START maps_current_place_on_create]
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        //binding = ActivitySixthPracticeGoogleMapBinding.inflate(layoutInflater)
         // [START_EXCLUDE silent]
         // Retrieve location and camera position from saved instance state.
         // [START maps_current_place_on_create_save_instance_state]
@@ -80,7 +101,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         // [END_EXCLUDE]
 
         // Retrieve the content view that renders the map.
-        setContentView(R.layout.activity_six_practice_google_map)
+        setContentView(R.layout.activity_sixth_practice_google_map)
 
         // [START_EXCLUDE silent]
         // Construct a PlacesClient
@@ -180,12 +201,6 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
 
-        data class MapLocation (
-            var obscode : String,
-            var obsname : String,
-            var latitude : Double,
-            var longtitude : Double)
-
         var locations = listOf(
             MapLocation("DT_0054", "진해", 35.147, 128.643),
             MapLocation("DT_0004", "제주", 33.527, 126.543),
@@ -211,6 +226,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                     .title(it.obsname)
                     .position(LatLng(it.latitude, it.longtitude)))
             marker?.tag = it
+            Log.d("googel", marker?.tag.toString())
             markers.add(marker!!)
         }
 
@@ -233,48 +249,145 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun showMarkerInfo(marker : Marker) {
-        Log.d("google", marker.title!!)
-        Log.d("google", marker.position.latitude.toString())
-        Log.d("google", marker.position.longitude.toString())
+        Log.d("google22", marker.title!!)
+        Log.d("google22", marker.position.latitude.toString())
+        Log.d("google22", marker.position.longitude.toString())
 
         val apikey = "/FFdZti8UpV2Ku/EnEYvg=="
         //val obscode = "DT_0001"
         val resulttype = "json"
         val today = LocalDateTime.now()
         val firstDay = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val secondDay = today.plusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val thirdDay = today.plusDays(2L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val fourthDay = today.plusDays(3L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val fifthDay = today.plusDays(4L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val sixthDay = today.plusDays(5L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
         val networkService = (applicationContext as APIApplication).networkService
         val tidelist = mutableListOf<TideModel>()
         //val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
-        val mytide1 = networkService.getTide(apikey, marker.snippet!!, firstDay, resulttype)
-        val mytemp1 = networkService.getTemp(apikey, marker.snippet!!, firstDay, resulttype)
+        //Log.d("google22", marker?.tag.toString())
+        val mytag : MapLocation = (marker?.tag!! as MapLocation)
+        //marker?.tag?.
+        val mytide1 = networkService.getTide(apikey, mytag.obscode, firstDay, resulttype)
+        val mytide2 = networkService.getTide(apikey, mytag.obscode, secondDay, resulttype)
+        val mytide3 = networkService.getTide(apikey, mytag.obscode, thirdDay, resulttype)
+        val mytide4 = networkService.getTide(apikey, mytag.obscode, fourthDay, resulttype)
+        val mytide5 = networkService.getTide(apikey, mytag.obscode, fifthDay, resulttype)
+        val mytide6 = networkService.getTide(apikey, mytag.obscode, sixthDay, resulttype)
+        val mytide7 = networkService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
+        val mytemp1 = networkService.getTemp(apikey, mytag.obscode, resulttype)
 
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
                 tidelist.clear()
+                Log.d("google22", "${tidelist.size}")
                 val tide = response.body()
+                Log.d("google22", "mytide1")
                 tidelist.add(tide!!)
-                Log.d("google", "$tide")
+                mytide2.enqueue(object : Callback<TideModel> {
+                    override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                        val tide = response.body()
+                        tidelist.add(tide!!)
+                        Log.d("google22", "mytide2")
+                        mytide3.enqueue(object : Callback<TideModel> {
+                            override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                val tide = response.body()
+                                tidelist.add(tide!!)
+                                Log.d("google22", "mytide3")
+                                mytide4.enqueue(object : Callback<TideModel> {
+                                    override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                        val tide = response.body()
+                                        tidelist.add(tide!!)
+                                        Log.d("google22", "mytide4")
+                                        mytide5.enqueue(object : Callback<TideModel> {
+                                            override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                                val tide = response.body()
+                                                tidelist.add(tide!!)
+                                                Log.d("google22", "mytide5")
+                                                mytide6.enqueue(object : Callback<TideModel> {
+                                                    override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                                        val tide = response.body()
+                                                        tidelist.add(tide!!)
+                                                        Log.d("google22", "mytide6")
+                                                        mytide7.enqueue(object :
+                                                            Callback<TideModel> {
+                                                            override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                                                val tide = response.body()
+                                                                tidelist.add(tide!!)
+                                                                Log.d("google22", "mytide7")
+                                                                Log.d("google22", "$tidelist")
+                                                                //val layoutManager = LinearLayoutManager(this@SixthPracticeGoogleMap)
+                                                                //myadapter.notifyDataSetChanged()
+                                                                //layoutManager.orientation = LinearLayoutManager.VERTICAL
+                                                                //binding.myrecyclerView.layoutManager = layoutManager
+                                                                //binding.myrecyclerView.addItemDecoration(
+                                                                //    DividerItemDecoration(
+                                                                //        this@SixthPracticeGoogleMap, LinearLayoutManager.VERTICAL
+                                                                //    )
+                                                                //)
+                                                                //binding.myrecyclerView.adapter = myadapter
+                                                                mytemp1.enqueue(object : Callback<TempModel> {
+                                                                    override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
+                                                                        //tidelist.clear()
+                                                                        val temp = response.body()
+                                                                        //tidelist.add(tide!!)
+                                                                        Log.d("google22", "$temp")
+                                                                        var s = ""
+                                                                        s += tidelist.toString()
+                                                                        s += temp.toString()
+                                                                        onSlideUpDialog()
+                                                                    }
+                                                                    override fun onFailure(call: Call<TempModel>, t: Throwable) {
+                                                                        Log.d("google22", "failed")
+                                                                        call.cancel()
+                                                                    }
+                                                                })
+                                                            }
+                                                            override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                                                Log.d("apitest", "failed")
+                                                                call.cancel()
+                                                            }
+                                                        })
+                                                    }
+                                                    override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                                        Log.d("apitest", "failed")
+                                                        call.cancel()
+                                                    }
+                                                })
+                                            }
+                                            override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                                Log.d("apitest", "failed")
+                                                call.cancel()
+                                            }
+                                        })
+                                    }
+                                    override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                        Log.d("apitest", "failed")
+                                        call.cancel()
+                                    }
+                                })
+                            }
+                            override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                Log.d("apitest", "failed")
+                                call.cancel()
+                            }
+                        })
+
+                    }
+                    override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                        Log.d("apitest", "failed")
+                        call.cancel()
+                    }
+                })
             }
             override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                Log.d("google", "failed")
+                Log.d("apitest", "failed")
                 call.cancel()
             }
         })
-
-        mytemp1.enqueue(object : Callback<TempModel> {
-            override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
-                //tidelist.clear()
-                val temp = response.body()
-                //tidelist.add(tide!!)
-                Log.d("google", "$temp")
-            }
-            override fun onFailure(call: Call<TempModel>, t: Throwable) {
-                Log.d("google", "failed")
-                call.cancel()
-            }
-        })
-
     }
 
     /**
@@ -499,7 +612,7 @@ class SixPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     // [END maps_current_place_update_location_ui]
 
     companion object {
-        private val TAG = SixPracticeGoogleMap::class.java.simpleName
+        private val TAG = SixthPracticeGoogleMap::class.java.simpleName
         private const val DEFAULT_ZOOM = 15
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
 

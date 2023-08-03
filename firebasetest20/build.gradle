@@ -18,7 +18,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
+        // 한 번에 최대로 참조할 수 있는 라이브러리의 수를 늘여줌
+        // 65536(2^16) 이상의 라이브러리를 읽을 수 있도록 해줌
         multiDexEnabled true
     }
 
@@ -28,6 +29,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // 안드로이드 업그레이드, 그래들 8.2.x 버전으로 업그레이드
+    // 코틀린 버전 업그레이드가 필요했음
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17

@@ -98,7 +98,7 @@ class PracticeActivity : AppCompatActivity() {
             }
             R.id.fishingMap -> {
                 Log.d("practice", "fishingmap here")
-                val intent = Intent(this@PracticeActivity, SixPracticeGoogleMap::class.java)
+                val intent = Intent(this@PracticeActivity, SixthPracticeGoogleMap::class.java)
                 startActivity(intent)
 
             }

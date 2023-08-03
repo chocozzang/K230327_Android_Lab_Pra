@@ -7,7 +7,7 @@ data class TempModel (
 )
 
 data class TempResult (
-    var data : List<TempInfo>,
+    var data : TempInfo,
     var meta : TempMeta
 )
 

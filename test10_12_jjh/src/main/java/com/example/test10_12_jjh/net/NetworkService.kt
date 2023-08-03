@@ -19,7 +19,6 @@ interface NetworkService {
     fun getTemp(
         @Query("ServiceKey") serviceKey : String,
         @Query("ObsCode") obsCode : String,
-        @Query("Date") date : String,
         @Query("ResultType") resultType : String
     ) : retrofit2.Call<TempModel>
 }

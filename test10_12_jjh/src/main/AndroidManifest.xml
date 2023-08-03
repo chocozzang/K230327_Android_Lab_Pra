@@ -7,7 +7,7 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 추가 Notification 확인을 하려고 하니 API 13 이상 부터는 시스템이 권한을 요구하므로 이를 자동 설정하였음 -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
@@ -27,6 +27,12 @@
         android:theme="@style/Theme.K230327_Android_Lab"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".test12.SlidingUpDialog"
+            android:exported="false" />
+        <activity
+            android:name=".test12.GoogleMapBottomSheetDialogFragment"
+            android:exported="false" />
+        <activity
             android:name=".test12.SixthPracticeTeachableMachine"
             android:exported="true" />
 
@@ -38,7 +44,7 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".test12.SixPracticeGoogleMap"
+            android:name=".test12.SixthPracticeGoogleMap"
             android:exported="true" />
         <activity
             android:name=".test12.SixthPracticeRecycle"
