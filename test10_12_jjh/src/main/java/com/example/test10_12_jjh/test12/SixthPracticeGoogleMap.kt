@@ -18,11 +18,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.test10_12_jjh.R
-import com.example.test10_12_jjh.adapter.APIAdapter
+import com.example.test10_12_jjh.adapter.APISlidingAdapter
+import com.example.test10_12_jjh.databinding.ActivityGoogleMapBottomSheetDialogFragmentBinding
 import com.example.test10_12_jjh.model.TempModel
 import com.example.test10_12_jjh.model.TideModel
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -48,6 +46,8 @@ import java.time.format.DateTimeFormatter
 class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     private var map: GoogleMap? = null
     private var cameraPosition: CameraPosition? = null
+    lateinit var myadapter : APISlidingAdapter
+    lateinit var binding : ActivityGoogleMapBottomSheetDialogFragmentBinding
     //lateinit var binding : ActivitySixthPracticeGoogleMapBinding
 
     // The entry point to the Places API.
@@ -92,6 +92,8 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         // [END maps_current_place_on_create_save_instance_state]
         // [END_EXCLUDE]
 
+//        myadapter = APISlidingAdapter(this)
+        binding = ActivityGoogleMapBottomSheetDialogFragmentBinding.inflate(layoutInflater)
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_sixth_practice_google_map)
 
@@ -272,7 +274,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val mytide7 = networkService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
         val mytemp1 = networkService.getTemp(apikey, mytag.obscode, resulttype)
 
-        val myadapter = APIAdapter(GoogleMapBottomSheetDialogFragment().context!!, tidelist)
+//        myadapter = APISlidingAdapter(this,tidelist)
 
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
@@ -322,20 +324,23 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                         var s = ""
                                                                         s += tidelist.toString()
                                                                         s += temp.toString()
-                                                                        val binding = findViewById<RecyclerView>(R.id.myrecyclerView)
-                                                                        val bottomsheetdialog = BottomSheetDialog()
+                                                                       // val binding = findViewById<RecyclerView>(R.id.myrecyclerView2)
+                                                                        val bottomsheetdialog = BottomSheetDialog(tidelist)
+                                                                        //myadapter.notifyDataSetChanged()
+                                                                        //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
+                                                                        //binding.layoutManager = linearLayoutManager
+                                                                        //binding.addItemDecoration(
+                                                                        //    DividerItemDecoration(
+                                                                        //        context, LinearLayoutManager.VERTICAL
+                                                                        //    )
+                                                                        //)
+//                                                                        myadapter = APISlidingAdapter(bottomsheetdialog,tidelist)
+////                                                                        myadapter.setDatas(tidelist)
+//                                                                        Log.d("lsy","tidelist : $tidelist")
+//                                                                        Log.d("lsy","myadapter : $myadapter")
+//                                                                        binding.myrecyclerView2.adapter = myadapter
                                                                         bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
-                                                                        val context = GoogleMapBottomSheetDialogFragment().context
-                                                                        val linearLayoutManager = LinearLayoutManager(context)
-                                                                        myadapter.notifyDataSetChanged()
-                                                                        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-                                                                        binding.layoutManager = linearLayoutManager
-                                                                        binding.addItemDecoration(
-                                                                            DividerItemDecoration(
-                                                                                context, LinearLayoutManager.VERTICAL
-                                                                            )
-                                                                        )
-                                                                        binding.adapter = myadapter
+
                                                                     }
                                                                     override fun onFailure(call: Call<TempModel>, t: Throwable) {
                                                                         Log.d("google22", "failed")
