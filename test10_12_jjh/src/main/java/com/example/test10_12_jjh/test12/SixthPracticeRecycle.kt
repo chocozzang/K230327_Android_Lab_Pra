@@ -67,7 +67,7 @@ class SixthPracticeRecycle : AppCompatActivity() {
             val sixthDay = today.plusDays(5L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
             val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
-            val networkService = (applicationContext as APIApplication).networkService
+            val networkService = (applicationContext as APIApplication).tideService
             val tidelist = mutableListOf<TideModel>()
             val myadapter = APIAdapter(this@SixthPracticeRecycle, tidelist)
 

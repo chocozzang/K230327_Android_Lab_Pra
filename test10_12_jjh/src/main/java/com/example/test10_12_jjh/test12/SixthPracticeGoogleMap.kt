@@ -21,9 +21,9 @@ import androidx.core.content.ContextCompat
 import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.adapter.APISlidingAdapter
 import com.example.test10_12_jjh.databinding.ActivityGoogleMapBottomSheetDialogFragmentBinding
-import com.example.test10_12_jjh.model.TempModel
 import com.example.test10_12_jjh.model.TideModel
 import com.example.test10_12_jjh.model.TidePreModel
+import com.example.test10_12_jjh.model.WeatherModel
 import com.github.mikephil.charting.data.Entry
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -39,6 +39,8 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import org.checkerframework.checker.units.qual.Temperature
+import kotlin.concurrent.thread
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -252,10 +254,24 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         Log.d("google22", marker.position.longitude.toString())
 
         val apikey = "/FFdZti8UpV2Ku/EnEYvg=="
+        val apikeyTemp = "0DZUAX87M9kJWvxPJWL3raL5m9BYWp2N%2FzlC8zZYrvAg6Lwvv7WqwI4%2Bvb729zpp8rxMBKyp29N7kJEzNwrdhQ%3D%3D"
         //val obscode = "DT_0001"
         val resulttype = "json"
+        lateinit var apiTime : String
+        lateinit var apiDay : String
         val today = LocalDateTime.now()
         val firstDay = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+        val firstTime = today.format(DateTimeFormatter.ofPattern("HHmm"))
+        when(firstTime.toInt()) {
+            in 215..2400 -> {
+                apiTime = "0200"
+                apiDay = firstDay
+            }
+            else -> {
+                apiTime = "2300"
+                apiDay = today.minusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+            }
+        }
         val secondDay = today.plusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val thirdDay = today.plusDays(2L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val fourthDay = today.plusDays(3L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
@@ -264,93 +280,102 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 
 
-        val networkService = (applicationContext as APIApplication).networkService
+        val tideService = (applicationContext as APIApplication).tideService
+        val tempService = (applicationContext as APIApplication).temperService
         val tidelist = mutableListOf<TideModel>()
         //val myadapter = APIAdapter(this@SixPracticeGoogleMap, tidelist)
         //Log.d("google22", marker?.tag.toString())
         val mytag : MapLocation = (marker?.tag!! as MapLocation)
-        val mytide1 = networkService.getTide(apikey, mytag.obscode, firstDay, resulttype)
-        val mytide2 = networkService.getTide(apikey, mytag.obscode, secondDay, resulttype)
-        val mytide3 = networkService.getTide(apikey, mytag.obscode, thirdDay, resulttype)
-        val mytide4 = networkService.getTide(apikey, mytag.obscode, fourthDay, resulttype)
-        val mytide5 = networkService.getTide(apikey, mytag.obscode, fifthDay, resulttype)
-        val mytide6 = networkService.getTide(apikey, mytag.obscode, sixthDay, resulttype)
-        val mytide7 = networkService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
-        val mytemp1 = networkService.getTemp(apikey, mytag.obscode, resulttype)
-        val nowtide = networkService.getPreTide(apikey, mytag.obscode, firstDay, resulttype)
-
-//        myadapter = APISlidingAdapter(this,tidelist)
-
-
+        val mytide1 = tideService.getTide(apikey, mytag.obscode, firstDay, resulttype)
+        val mytide2 = tideService.getTide(apikey, mytag.obscode, secondDay, resulttype)
+        val mytide3 = tideService.getTide(apikey, mytag.obscode, thirdDay, resulttype)
+        val mytide4 = tideService.getTide(apikey, mytag.obscode, fourthDay, resulttype)
+        val mytide5 = tideService.getTide(apikey, mytag.obscode, fifthDay, resulttype)
+        val mytide6 = tideService.getTide(apikey, mytag.obscode, sixthDay, resulttype)
+        val mytide7 = tideService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
+        val nowtide = tideService.getPreTide(apikey, mytag.obscode, firstDay, resulttype)
+        val xy = mapToGrid(mytag.latitude, mytag.longtitude)
+        val weather = tempService.getWeather(apikeyTemp, 1, 1000, resulttype, apiDay, apiTime, xy.x.toInt(), xy.y.toInt())
+        Log.d("google22", "$apiDay, $apiTime, ${xy.x.toInt()}, ${xy.y.toInt()}")
+        data class temper (val date : String, val type : String, val temp : String)
+        val temperatures = mutableListOf<temper>()
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
                 tidelist.clear()
-                Log.d("google22", "${tidelist.size}")
                 val tide = response.body()
-                Log.d("google22", "mytide1")
                 tidelist.add(tide!!)
                 mytide2.enqueue(object : Callback<TideModel> {
                     override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                         val tide = response.body()
                         tidelist.add(tide!!)
-                        Log.d("google22", "mytide2")
                         mytide3.enqueue(object : Callback<TideModel> {
                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                 val tide = response.body()
                                 tidelist.add(tide!!)
-                                Log.d("google22", "mytide3")
                                 mytide4.enqueue(object : Callback<TideModel> {
                                     override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                         val tide = response.body()
                                         tidelist.add(tide!!)
-                                        Log.d("google22", "mytide4")
                                         mytide5.enqueue(object : Callback<TideModel> {
                                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                 val tide = response.body()
                                                 tidelist.add(tide!!)
-                                                Log.d("google22", "mytide5")
                                                 mytide6.enqueue(object : Callback<TideModel> {
                                                     override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                         val tide = response.body()
                                                         tidelist.add(tide!!)
-                                                        Log.d("google22", "mytide6")
-                                                        mytide7.enqueue(object :
-                                                            Callback<TideModel> {
+                                                        mytide7.enqueue(object : Callback<TideModel> {
                                                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                                 val tide = response.body()
                                                                 tidelist.add(tide!!)
-                                                                Log.d("google22", "mytide7")
                                                                 Log.d("google22", "$tidelist")
-                                                                mytemp1.enqueue(object : Callback<TempModel> {
-                                                                    override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
-                                                                        val temp = response.body()
-                                                                        Log.d("google22", "$temp")
-                                                                        var levels = mutableListOf<Entry>()
-                                                                        nowtide.enqueue(object : Callback<TidePreModel> {
-                                                                            override fun onResponse(call : Call<TidePreModel>, response: Response<TidePreModel>) {
-                                                                                val pretide = response.body()
-                                                                                Log.d("google22", "$pretide")
-                                                                                var i = 0
-                                                                                for(s in pretide?.result?.data!!) {
-                                                                                    levels.add(Entry(i.toFloat(), s.tidelevel!!.toFloat()))
-                                                                                    i++
+                                                                var levels = mutableListOf<Entry>()
+                                                                nowtide.enqueue(object : Callback<TidePreModel> {
+                                                                    override fun onResponse(call : Call<TidePreModel>, response: Response<TidePreModel>) {
+                                                                        val pretide = response.body()
+                                                                        Log.d("google22", "$pretide")
+                                                                        var i = 0
+                                                                        for(s in pretide?.result?.data!!) {
+                                                                            levels.add(Entry(i.toFloat(), s.tidelevel!!.toFloat()))
+                                                                            i++
+                                                                        }
+                                                                        weather.enqueue(object : Callback<WeatherModel> {
+                                                                            override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+                                                                                val temps = response.body()
+                                                                                val tempPres = temps?.response?.body?.items?.tempPre
+                                                                                tempPres!!.forEach {
+                                                                                    if(it.fcstDate == firstDay && it.category == "TMN")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(it.fcstDate == firstDay && it.category == "TMX")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(it.fcstDate == secondDay && it.category == "TMN")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(it.fcstDate == secondDay && it.category == "TMX")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(it.fcstDate == thirdDay && it.category == "TMN")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(it.fcstDate == thirdDay && it.category == "TMX")
+                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                    if(temperatures.size == 6) return@forEach
                                                                                 }
-                                                                                val bottomsheetdialog = BottomSheetDialog(tidelist, levels)
-                                                                                bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
-                                                                            }
 
-                                                                            override fun onFailure(call : Call<TidePreModel>, t : Throwable) {
-                                                                                call.cancel()
+                                                                                Log.d("google22", "$temperatures")
                                                                             }
+                                                                            override fun onFailure(
+                                                                                call: Call<WeatherModel>,
+                                                                                t: Throwable
+                                                                            ) { Log.d("google22", "failed") }
                                                                         })
-
+                                                                        val bottomsheetdialog = BottomSheetDialog(tidelist, levels)
+                                                                        bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
                                                                     }
-                                                                    override fun onFailure(call: Call<TempModel>, t: Throwable) {
-                                                                        Log.d("google22", "failed")
+
+                                                                    override fun onFailure(call : Call<TidePreModel>, t : Throwable) {
                                                                         call.cancel()
                                                                     }
                                                                 })
                                                             }
+
                                                             override fun onFailure(call: Call<TideModel>, t: Throwable) {
                                                                 Log.d("apitest", "failed")
                                                                 call.cancel()
