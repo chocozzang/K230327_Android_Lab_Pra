@@ -9,6 +9,7 @@ class APIApplication : Application(){
 
     var networkService : NetworkService
     var networkService2 : NetworkService
+    var networkService3 : NetworkService
 
     val retrofit : Retrofit
         get() = Retrofit.Builder()
@@ -22,9 +23,16 @@ class APIApplication : Application(){
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
+    val retrofit3 : Retrofit
+        get() = Retrofit.Builder()
+            .baseUrl("http://www.khoa.go.kr/api/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
     init {
         networkService = retrofit.create(NetworkService::class.java)
         networkService2 = retrofit2.create(NetworkService::class.java)
+        networkService3 = retrofit3.create(NetworkService::class.java)
     }
 
 }

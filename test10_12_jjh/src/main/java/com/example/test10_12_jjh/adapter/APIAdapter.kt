@@ -1,12 +1,16 @@
 package com.example.test10_12_jjh.adapter
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test10_12_jjh.databinding.ItemPracticeBinding
 import com.example.test10_12_jjh.model.TideModel
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 // 커스텀 뷰홀더
 // 아이템에 대한 뷰를 바인딩함
@@ -24,27 +28,30 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?) : Recycler
         return datas?.size!!
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         Log.d("apitest", "뷰바인더홀더 ::: $position")
         val binding = (holder as APIViewHolder).binding
         val tide = datas?.get(position)
-        binding.practiceItem.text = "측정위치 : "+ tide?.result?.meta?.postid + " - " + tide?.result?.meta?.postname
+        binding.practiceItem.text = "측정위치 : " + tide?.result?.meta?.postname
         val tidetimes = tide?.result?.data
+        val today = LocalDateTime.now()
+        val targetDay = today.plusDays(position.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
         var tempStr : String = ""
         if(tidetimes?.size!! == 0) {
             tempStr.plus("조석 정보 없음")
         }
         else {
             Log.d("apitest", "$position")
-            tempStr += "날짜 : ${tidetimes?.get(0)?.tidetime?.substring(0, 11)}"
+            tempStr += "날짜 : $targetDay"
             var highcnt = 0
             var lowcnt  = 0
             for (i in 0 until tidetimes?.size!!) {
                 if (tidetimes?.get(i)?.tidetype.equals("고조")) {
-                    tempStr += "\n만조 시간 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
+                    tempStr += "\n만조 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     highcnt++
                 } else {
-                    tempStr += "\n간조 시간 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
+                    tempStr += "\n간조 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     lowcnt++
                 }
             }

@@ -23,6 +23,8 @@ import com.example.test10_12_jjh.adapter.APISlidingAdapter
 import com.example.test10_12_jjh.databinding.ActivityGoogleMapBottomSheetDialogFragmentBinding
 import com.example.test10_12_jjh.model.TempModel
 import com.example.test10_12_jjh.model.TideModel
+import com.example.test10_12_jjh.model.TidePreModel
+import com.github.mikephil.charting.data.Entry
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -75,6 +77,8 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         var obsname : String,
         var latitude : Double,
         var longtitude : Double)
+
+    data class XYGrid (var x : Double, var y : Double)
 
 
 
@@ -273,8 +277,10 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val mytide6 = networkService.getTide(apikey, mytag.obscode, sixthDay, resulttype)
         val mytide7 = networkService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
         val mytemp1 = networkService.getTemp(apikey, mytag.obscode, resulttype)
+        val nowtide = networkService.getPreTide(apikey, mytag.obscode, firstDay, resulttype)
 
 //        myadapter = APISlidingAdapter(this,tidelist)
+
 
         mytide1.enqueue(object : Callback<TideModel> {
             override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
@@ -317,29 +323,26 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                 Log.d("google22", "$tidelist")
                                                                 mytemp1.enqueue(object : Callback<TempModel> {
                                                                     override fun onResponse(call: Call<TempModel>, response: Response<TempModel>) {
-                                                                        //tidelist.clear()
                                                                         val temp = response.body()
-                                                                        //tidelist.add(tide!!)
                                                                         Log.d("google22", "$temp")
-                                                                        var s = ""
-                                                                        s += tidelist.toString()
-                                                                        s += temp.toString()
-                                                                       // val binding = findViewById<RecyclerView>(R.id.myrecyclerView2)
-                                                                        val bottomsheetdialog = BottomSheetDialog(tidelist)
-                                                                        //myadapter.notifyDataSetChanged()
-                                                                        //linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-                                                                        //binding.layoutManager = linearLayoutManager
-                                                                        //binding.addItemDecoration(
-                                                                        //    DividerItemDecoration(
-                                                                        //        context, LinearLayoutManager.VERTICAL
-                                                                        //    )
-                                                                        //)
-//                                                                        myadapter = APISlidingAdapter(bottomsheetdialog,tidelist)
-////                                                                        myadapter.setDatas(tidelist)
-//                                                                        Log.d("lsy","tidelist : $tidelist")
-//                                                                        Log.d("lsy","myadapter : $myadapter")
-//                                                                        binding.myrecyclerView2.adapter = myadapter
-                                                                        bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
+                                                                        var levels = mutableListOf<Entry>()
+                                                                        nowtide.enqueue(object : Callback<TidePreModel> {
+                                                                            override fun onResponse(call : Call<TidePreModel>, response: Response<TidePreModel>) {
+                                                                                val pretide = response.body()
+                                                                                Log.d("google22", "$pretide")
+                                                                                var i = 0
+                                                                                for(s in pretide?.result?.data!!) {
+                                                                                    levels.add(Entry(i.toFloat(), s.tidelevel!!.toFloat()))
+                                                                                    i++
+                                                                                }
+                                                                                val bottomsheetdialog = BottomSheetDialog(tidelist, levels)
+                                                                                bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
+                                                                            }
+
+                                                                            override fun onFailure(call : Call<TidePreModel>, t : Throwable) {
+                                                                                call.cancel()
+                                                                            }
+                                                                        })
 
                                                                     }
                                                                     override fun onFailure(call: Call<TempModel>, t: Throwable) {
@@ -395,6 +398,45 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
+
+    fun mapToGrid(lat : Double, lon : Double) : XYGrid{
+        var RE = 6371.00877 // 지구 반경(km)
+        var GRID = 5.0 // 격자 간격(km)
+        var SLAT1 = 30.0 // 투영 위도1(degree)
+        var SLAT2 = 60.0 // 투영 위도2(degree)
+        var OLON = 126.0 // 기준점 경도(degree)
+        var OLAT = 38.0 // 기준점 위도(degree)
+        var XO = 43 // 기준점 X좌표(GRID)
+        var YO = 136 // 기1준점 Y좌표(GRID)
+        var DEGRAD = Math.PI / 180.0
+        var RADDEG = 180.0 / Math.PI
+
+        var re = RE / GRID
+        var slat1 = SLAT1 * DEGRAD
+        var slat2 = SLAT2 * DEGRAD
+        var olon = OLON * DEGRAD
+        var olat = OLAT * DEGRAD
+
+        var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5)
+        sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn)
+        var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5)
+        sf = Math.pow(sf, sn) * Math.cos(slat1) / sn
+        var ro = Math.tan(Math.PI * 0.25 + olat * 0.5)
+        ro = re * sf / Math.pow(ro, sn)
+
+        var ra = Math.tan(Math.PI * 0.25 + (lat) * DEGRAD * 0.5)
+        ra = re * sf / Math.pow(ra, sn)
+        var theta = lon * DEGRAD - olon
+        if (theta > Math.PI) theta -= 2.0 * Math.PI
+        if (theta < -Math.PI) theta += 2.0 * Math.PI
+        theta *= sn
+
+        val x = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+        val y = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+
+        return XYGrid(x, y)
+    }
+
     // [START maps_current_place_get_device_location]
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {

@@ -1,36 +1,35 @@
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:id="@+id/bottom_sheet"
-    android:padding="16dp">
-
-    <TextView
-        android:id="@+id/bottom_text"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="조석 예보 및 현재 날씨"
-        android:layout_gravity="center_horizontal"
-        android:textSize="18sp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/myrecyclerView2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <Button
-        android:id="@+id/btn_hide_bt_sheet"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:text="Hide Bottom Sheet" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:id="@+id/bottom_sheet"
+        android:padding="16dp">
 
-    <!-- 원하는 다른 뷰들을 추가할 수 있습니다. -->
+        <TextView
+            android:id="@+id/bottom_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="조석 예보 및 현재 날씨"
+            android:layout_gravity="center_horizontal"
+            android:textSize="18sp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/myrecyclerView2"
+            android:layout_width="wrap_content"
+            android:layout_height="500dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <!-- 원하는 다른 뷰들을 추가할 수 있습니다. -->
 
 </LinearLayout>
+
