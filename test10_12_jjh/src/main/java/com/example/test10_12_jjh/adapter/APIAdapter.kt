@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test10_12_jjh.databinding.ItemPracticeBinding
 import com.example.test10_12_jjh.model.TideModel
+import com.example.test10_12_jjh.model.temper
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -20,7 +21,7 @@ class APIViewHolder(val binding : ItemPracticeBinding) : RecyclerView.ViewHolder
 // onCreateViewHolder
 // getItemCount
 // onBindViewHolder를 Implement할 것
-class APIAdapter(val context : Context, val datas : List<TideModel>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class APIAdapter(val context : Context, val datas : List<TideModel>?, val tempers : List<temper>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder 
         = APIViewHolder(ItemPracticeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -33,7 +34,6 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?) : Recycler
         Log.d("apitest", "뷰바인더홀더 ::: $position")
         val binding = (holder as APIViewHolder).binding
         val tide = datas?.get(position)
-        binding.practiceItem.text = "측정위치 : " + tide?.result?.meta?.postname
         val tidetimes = tide?.result?.data
         val today = LocalDateTime.now()
         val targetDay = today.plusDays(position.toLong()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
@@ -48,14 +48,31 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?) : Recycler
             var lowcnt  = 0
             for (i in 0 until tidetimes?.size!!) {
                 if (tidetimes?.get(i)?.tidetype.equals("고조")) {
-                    tempStr += "\n만조 #${highcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
+                    tempStr += "\n만조 : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     highcnt++
                 } else {
-                    tempStr += "\n간조 #${lowcnt + 1} : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
+                    tempStr += "\n간조 : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
                     lowcnt++
                 }
             }
+            if(tempers?.size!! == 0) {
+                tempStr += "\n날씨 정보 없음"
+            } else {
+                var upTemp : String = ""
+                var downTemp : String = ""
+                for(i in position * 2 until (position + 1) * 2) {
+                    if(tempers?.get(i)?.type == "TMX") upTemp += "\n최고 기온 : ${tempers?.get(i)?.temp}"
+                    if(tempers?.get(i)?.type == "TMN") downTemp += "\n최저 기온 : ${tempers?.get(i)?.temp}"
+                    if(tempers?.get(i)?.type == "TMP") {
+                        tempStr += "\n현재 기온 : ${tempers?.get(i)?.temp}"
+                        break
+                    }
+                }
+                tempStr += upTemp
+                tempStr += downTemp
+            }
         }
+        Log.d("apitest", "${tempers?.size}")
         Log.d("apitest", tempStr)
         binding.practiceItemDetail.text = tempStr
         binding.practiceRoot.setOnClickListener { 

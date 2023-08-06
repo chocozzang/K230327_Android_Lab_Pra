@@ -21,9 +21,11 @@ import androidx.core.content.ContextCompat
 import com.example.test10_12_jjh.R
 import com.example.test10_12_jjh.adapter.APISlidingAdapter
 import com.example.test10_12_jjh.databinding.ActivityGoogleMapBottomSheetDialogFragmentBinding
+import com.example.test10_12_jjh.model.ForecastModel
 import com.example.test10_12_jjh.model.TideModel
 import com.example.test10_12_jjh.model.TidePreModel
 import com.example.test10_12_jjh.model.WeatherModel
+import com.example.test10_12_jjh.model.temper
 import com.github.mikephil.charting.data.Entry
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -39,8 +41,9 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
-import org.checkerframework.checker.units.qual.Temperature
-import kotlin.concurrent.thread
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,6 +78,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     private var likelyPlaceLatLngs: Array<LatLng?> = arrayOfNulls(0)
 
     data class MapLocation (
+        var regId : String,
         var obscode : String,
         var obsname : String,
         var latitude : Double,
@@ -202,19 +206,19 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         getDeviceLocation()
 
         var locations = listOf(
-            MapLocation("DT_0054", "진해", 35.147, 128.643),
-            MapLocation("DT_0004", "제주", 33.527, 126.543),
-            MapLocation("DT_0005", "부산", 35.096, 129.035),
-            MapLocation("DT_0007", "목포", 34.779, 126.375),
-            MapLocation("DT_0012", "속초", 38.207, 128.594),
-            MapLocation("DT_0016", "여수", 34.747, 127.765),
-            MapLocation("DT_0027", "완도", 34.315, 126.759),
-            MapLocation("DT_0028", "진도", 34.377, 126.308),
-            MapLocation("DT_0029", "거제도", 34.801, 128.699),
-            MapLocation("DT_0031", "거문도", 34.028, 127.308),
-            MapLocation("DT_0035", "흑산도", 34.684, 125.435),
-            MapLocation("DT_0050", "태안", 36.913, 126.238),
-            MapLocation("DT_0056", "부산항 신항", 35.077, 128.768)
+//            MapLocation("DT_0054", "진해", 35.147, 128.643),
+//            MapLocation("DT_0004", "제주", 33.527, 126.543),
+            MapLocation("11H20201", "DT_0005", "부산", 35.096, 129.035)
+//            MapLocation("DT_0007", "목포", 34.779, 126.375),
+//            MapLocation("DT_0012", "속초", 38.207, 128.594),
+//            MapLocation("DT_0016", "여수", 34.747, 127.765),
+//            MapLocation("DT_0027", "완도", 34.315, 126.759),
+//            MapLocation("DT_0028", "진도", 34.377, 126.308),
+//            MapLocation("DT_0029", "거제도", 34.801, 128.699),
+//            MapLocation("DT_0031", "거문도", 34.028, 127.308),
+//            MapLocation("DT_0035", "흑산도", 34.684, 125.435),
+//            MapLocation("DT_0050", "태안", 36.913, 126.238),
+//            MapLocation("DT_0056", "부산항 신항", 35.077, 128.768)
 
         )
 
@@ -240,7 +244,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         }
 
         map.setOnMarkerClickListener {
-            clickedMarker -> showMarkerInfo(clickedMarker)
+                clickedMarker -> showMarkerInfo(clickedMarker)
             true
         }
 
@@ -255,11 +259,18 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
 
         val apikey = "/FFdZti8UpV2Ku/EnEYvg=="
         val apikeyTemp = "0DZUAX87M9kJWvxPJWL3raL5m9BYWp2N%2FzlC8zZYrvAg6Lwvv7WqwI4%2Bvb729zpp8rxMBKyp29N7kJEzNwrdhQ%3D%3D"
+        val apikeyTemp2 = "0DZUAX87M9kJWvxPJWL3raL5m9BYWp2N/zlC8zZYrvAg6Lwvv7WqwI4+vb729zpp8rxMBKyp29N7kJEzNwrdhQ=="
+        val apiKeyFore = "0DZUAX87M9kJWvxPJWL3raL5m9BYWp2N%2FzlC8zZYrvAg6Lwvv7WqwI4%2Bvb729zpp8rxMBKyp29N7kJEzNwrdhQ%3D%3D"
+        val apiKeyFore2 = "0DZUAX87M9kJWvxPJWL3raL5m9BYWp2N/zlC8zZYrvAg6Lwvv7WqwI4+vb729zpp8rxMBKyp29N7kJEzNwrdhQ=="
         //val obscode = "DT_0001"
         val resulttype = "json"
         lateinit var apiTime : String
         lateinit var apiDay : String
+        lateinit var apiDayFore : String
         val today = LocalDateTime.now()
+        val apiTimeFore1 = today.minusDays(3L).format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
+        Log.d("google22", apiTimeFore1)
+        lateinit var apiTimeFore2 : String
         val firstDay = today.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val firstTime = today.format(DateTimeFormatter.ofPattern("HHmm"))
         when(firstTime.toInt()) {
@@ -267,9 +278,51 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                 apiTime = "0200"
                 apiDay = firstDay
             }
+            in 515..814 -> {
+                apiTime = "0500"
+                apiDay = firstDay
+            }
+            in 815..1114 -> {
+                apiTime = "0800"
+                apiDay = firstDay
+            }
+            in 1115..1414 -> {
+                apiTime = "1100"
+                apiDay = firstDay
+            }
+            in 1415..1714 -> {
+                apiTime = "1400"
+                apiDay = firstDay
+            }
+            in 1715..2014 -> {
+                apiTime = "1700"
+                apiDay = firstDay
+            }
+            in 2015..2314 -> {
+                apiTime = "2000"
+                apiDay = firstDay
+            }
+            in 2315..2400 -> {
+                apiTime = "2300"
+                apiDay = firstDay
+            }
             else -> {
                 apiTime = "2300"
                 apiDay = today.minusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+            }
+        }
+        when(firstTime.toInt()) {
+            in 605..1804 -> {
+                apiDayFore = firstDay
+                apiTimeFore2 = apiDayFore + "0600"
+            }
+            in 1805..2359 -> {
+                apiDayFore = firstDay
+                apiTimeFore2 = apiDayFore + "1800"
+            }
+            else -> {
+                apiDayFore = today.minusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+                apiTimeFore2 = apiDayFore + "1800"
             }
         }
         val secondDay = today.plusDays(1L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
@@ -278,8 +331,6 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val fifthDay = today.plusDays(4L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val sixthDay = today.plusDays(5L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
-
-
         val tideService = (applicationContext as APIApplication).tideService
         val tempService = (applicationContext as APIApplication).temperService
         val tidelist = mutableListOf<TideModel>()
@@ -295,129 +346,151 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val mytide7 = tideService.getTide(apikey, mytag.obscode, seventhDay, resulttype)
         val nowtide = tideService.getPreTide(apikey, mytag.obscode, firstDay, resulttype)
         val xy = mapToGrid(mytag.latitude, mytag.longtitude)
-        val weather = tempService.getWeather(apikeyTemp, 1, 1000, resulttype, apiDay, apiTime, xy.x.toInt(), xy.y.toInt())
+        val weather = tempService.getWeather(apikeyTemp2, 1, 900, resulttype, apiDay, apiTime, xy.x.toInt(), xy.y.toInt())
+        val forecast = tempService.getForecast(apiKeyFore2, 1, 10, resulttype, mytag.regId, apiTimeFore1)
+        val forecast2 = tempService.getForecast(apiKeyFore2, 1, 10, resulttype, mytag.regId, apiTimeFore2)
         Log.d("google22", "$apiDay, $apiTime, ${xy.x.toInt()}, ${xy.y.toInt()}")
-        data class temper (val date : String, val type : String, val temp : String)
+
         val temperatures = mutableListOf<temper>()
-        mytide1.enqueue(object : Callback<TideModel> {
-            override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
-                tidelist.clear()
-                val tide = response.body()
-                tidelist.add(tide!!)
-                mytide2.enqueue(object : Callback<TideModel> {
-                    override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+        var levels = mutableListOf<Entry>()
+        val scope = CoroutineScope(Dispatchers.Main)
+        scope.launch {
+            try {
+                mytide1.enqueue(object : Callback<TideModel> {
+                    override fun onResponse(call: Call<TideModel>, response: Response<TideModel>) {
+                        tidelist.clear()
                         val tide = response.body()
                         tidelist.add(tide!!)
-                        mytide3.enqueue(object : Callback<TideModel> {
+                        mytide2.enqueue(object : Callback<TideModel> {
                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                 val tide = response.body()
                                 tidelist.add(tide!!)
-                                mytide4.enqueue(object : Callback<TideModel> {
+                                mytide3.enqueue(object : Callback<TideModel> {
                                     override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                         val tide = response.body()
                                         tidelist.add(tide!!)
-                                        mytide5.enqueue(object : Callback<TideModel> {
+                                        mytide4.enqueue(object : Callback<TideModel> {
                                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                 val tide = response.body()
                                                 tidelist.add(tide!!)
-                                                mytide6.enqueue(object : Callback<TideModel> {
+                                                mytide5.enqueue(object : Callback<TideModel> {
                                                     override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                         val tide = response.body()
                                                         tidelist.add(tide!!)
-                                                        mytide7.enqueue(object : Callback<TideModel> {
+                                                        mytide6.enqueue(object :
+                                                            Callback<TideModel> {
                                                             override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
                                                                 val tide = response.body()
                                                                 tidelist.add(tide!!)
-                                                                Log.d("google22", "$tidelist")
-                                                                var levels = mutableListOf<Entry>()
-                                                                nowtide.enqueue(object : Callback<TidePreModel> {
-                                                                    override fun onResponse(call : Call<TidePreModel>, response: Response<TidePreModel>) {
-                                                                        val pretide = response.body()
-                                                                        Log.d("google22", "$pretide")
-                                                                        var i = 0
-                                                                        for(s in pretide?.result?.data!!) {
-                                                                            levels.add(Entry(i.toFloat(), s.tidelevel!!.toFloat()))
-                                                                            i++
-                                                                        }
-                                                                        weather.enqueue(object : Callback<WeatherModel> {
-                                                                            override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
-                                                                                val temps = response.body()
-                                                                                val tempPres = temps?.response?.body?.items?.tempPre
-                                                                                tempPres!!.forEach {
-                                                                                    if(it.fcstDate == firstDay && it.category == "TMN")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(it.fcstDate == firstDay && it.category == "TMX")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(it.fcstDate == secondDay && it.category == "TMN")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(it.fcstDate == secondDay && it.category == "TMX")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(it.fcstDate == thirdDay && it.category == "TMN")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(it.fcstDate == thirdDay && it.category == "TMX")
-                                                                                        temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                    if(temperatures.size == 6) return@forEach
+                                                                mytide7.enqueue(object :
+                                                                    Callback<TideModel> {
+                                                                    override fun onResponse(call : Call<TideModel>, response : Response<TideModel>) {
+                                                                        val tide = response.body()
+                                                                        tidelist.add(tide!!)
+                                                                        Log.d("google22", "$tidelist")
+                                                                        nowtide.enqueue(object : Callback<TidePreModel> {
+                                                                            override fun onResponse(call : Call<TidePreModel>, response: Response<TidePreModel>) {
+                                                                                val pretide = response.body()
+                                                                                Log.d("google22", "$pretide")
+                                                                                var i = 0
+                                                                                for(s in pretide?.result?.data!!) {
+                                                                                    levels.add(Entry(i.toFloat(), s.tidelevel!!.toFloat()))
+                                                                                    i++
                                                                                 }
-
-                                                                                Log.d("google22", "$temperatures")
+                                                                                weather.enqueue(object : Callback<WeatherModel> {
+                                                                                    override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+                                                                                        val temps = response.body()
+                                                                                        val tempPres = temps?.response?.body?.items?.tempPre
+                                                                                        var checknowtmp = true
+                                                                                        tempPres!!.forEach {
+                                                                                            if(it.fcstDate == firstDay && it.category == "TMP" && checknowtmp) {
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                                checknowtmp = false
+                                                                                            }
+                                                                                            if(it.fcstDate == secondDay && it.category == "TMN")
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                            if(it.fcstDate == secondDay && it.category == "TMX")
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                            if(it.fcstDate == thirdDay && it.category == "TMN")
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                            if(it.fcstDate == thirdDay && it.category == "TMX")
+                                                                                                temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
+                                                                                            if(temperatures.size == 6) return@forEach
+                                                                                        }
+                                                                                        Log.d("google22", "yy")
+                                                                                        forecast2.enqueue(object : Callback<ForecastModel> {
+                                                                                            override fun onResponse(call: Call<ForecastModel>, response: Response<ForecastModel>) {
+                                                                                                val fore = response.body()
+                                                                                                val forecasts = fore?.response?.body?.items?.tempFore
+                                                                                                temperatures.add(temper(fourthDay, "TMN", forecasts?.get(0)?.taMin3!!))
+                                                                                                temperatures.add(temper(fourthDay, "TMX", forecasts?.get(0)?.taMax3!!))
+                                                                                                temperatures.add(temper(fifthDay, "TMN", forecasts?.get(0)?.taMin4!!))
+                                                                                                temperatures.add(temper(fifthDay, "TMX", forecasts?.get(0)?.taMax4!!))
+                                                                                                temperatures.add(temper(sixthDay, "TMN", forecasts?.get(0)?.taMin5!!))
+                                                                                                temperatures.add(temper(sixthDay, "TMX", forecasts?.get(0)?.taMax5!!))
+                                                                                                temperatures.add(temper(seventhDay, "TMN", forecasts?.get(0)?.taMin6!!))
+                                                                                                temperatures.add(temper(seventhDay, "TMX", forecasts?.get(0)?.taMax6!!))
+                                                                                                Log.d("google22", "$temperatures")
+                                                                                                val bottomsheetdialog = BottomSheetDialog(tidelist, levels, temperatures, mytag.obsname)
+                                                                                                bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
+                                                                                            }
+                                                                                            override fun onFailure(call: Call<ForecastModel>, t: Throwable
+                                                                                            ) { Log.d("google22", "failedForecast") }
+                                                                                        })
+                                                                                    }
+                                                                                    override fun onFailure(call: Call<WeatherModel>, t: Throwable)
+                                                                                    { Log.d("google22", "failedTemper") }
+                                                                                })
                                                                             }
-                                                                            override fun onFailure(
-                                                                                call: Call<WeatherModel>,
-                                                                                t: Throwable
-                                                                            ) { Log.d("google22", "failed") }
+                                                                            override fun onFailure(call : Call<TidePreModel>, t : Throwable) {
+                                                                                call.cancel()
+                                                                            }
                                                                         })
-                                                                        val bottomsheetdialog = BottomSheetDialog(tidelist, levels)
-                                                                        bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
                                                                     }
-
-                                                                    override fun onFailure(call : Call<TidePreModel>, t : Throwable) {
+                                                                    override fun onFailure(call: Call<TideModel>, t: Throwable) {
+                                                                        Log.d("google22", "failed")
                                                                         call.cancel()
-                                                                    }
-                                                                })
+                                                                    } })
                                                             }
-
                                                             override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                                                                Log.d("apitest", "failed")
+                                                                Log.d("google22", "failed")
                                                                 call.cancel()
-                                                            }
-                                                        })
+                                                            } })
                                                     }
                                                     override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                                                        Log.d("apitest", "failed")
+                                                        Log.d("google22", "failed")
                                                         call.cancel()
                                                     }
                                                 })
                                             }
                                             override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                                                Log.d("apitest", "failed")
+                                                Log.d("google22", "failed")
                                                 call.cancel()
                                             }
                                         })
                                     }
                                     override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                                        Log.d("apitest", "failed")
+                                        Log.d("google22", "failed")
                                         call.cancel()
                                     }
                                 })
                             }
                             override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                                Log.d("apitest", "failed")
+                                Log.d("google22", "failed")
                                 call.cancel()
                             }
                         })
-
                     }
                     override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                        Log.d("apitest", "failed")
+                        Log.d("google22", "failed")
                         call.cancel()
                     }
                 })
+            } catch (e : Exception) {
+                Log.d("google22", "failed api")
             }
-            override fun onFailure(call: Call<TideModel>, t: Throwable) {
-                Log.d("apitest", "failed")
-                call.cancel()
-            }
-        })
+        }
     }
 
     /**
@@ -487,7 +560,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                         Log.e(TAG, "Exception: %s", task.exception)
                         map?.moveCamera(
                             CameraUpdateFactory
-                            .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
+                                .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
                         map?.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }

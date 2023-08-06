@@ -69,7 +69,7 @@ class SixthPracticeRecycle : AppCompatActivity() {
 
             val networkService = (applicationContext as APIApplication).tideService
             val tidelist = mutableListOf<TideModel>()
-            val myadapter = APIAdapter(this@SixthPracticeRecycle, tidelist)
+            val myadapter = APIAdapter(this@SixthPracticeRecycle, tidelist, null)
 
             val mytide1 = networkService.getTide(apikey, obscode, firstDay, resulttype)
             val mytide2 = networkService.getTide(apikey, obscode, secondDay, resulttype)

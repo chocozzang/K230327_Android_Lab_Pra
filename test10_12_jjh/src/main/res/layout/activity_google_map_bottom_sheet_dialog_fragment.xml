@@ -4,17 +4,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
+        android:gravity="center"
+        android:layout_gravity="center"
         android:id="@+id/bottom_sheet"
+        android:background="@drawable/bottom_spinner"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/bottom_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="조석 예보 및 현재 날씨"
-            android:layout_gravity="center_horizontal"
-            android:textSize="18sp" />
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
@@ -24,7 +27,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myrecyclerView2"
             android:layout_width="wrap_content"
-            android:layout_height="500dp"
+            android:layout_height="300dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </androidx.recyclerview.widget.RecyclerView>
