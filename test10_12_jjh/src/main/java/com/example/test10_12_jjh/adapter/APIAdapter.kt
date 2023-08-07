@@ -21,7 +21,7 @@ class APIViewHolder(val binding : ItemPracticeBinding) : RecyclerView.ViewHolder
 // onCreateViewHolder
 // getItemCount
 // onBindViewHolder를 Implement할 것
-class APIAdapter(val context : Context, val datas : List<TideModel>?, val tempers : List<temper>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class APIAdapter(val context : Context, val datas : List<TideModel>?, val tempers : List<temper>?, val lunars : List<String>?) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder 
         = APIViewHolder(ItemPracticeBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -44,38 +44,53 @@ class APIAdapter(val context : Context, val datas : List<TideModel>?, val temper
         else {
             Log.d("apitest", "$position")
             tempStr += "날짜 : $targetDay"
-            var highcnt = 0
-            var lowcnt  = 0
+            var highStr : String = ""
+            var counta = 0
+            var countb = 0
+            var lowStr : String = ""
+            tempStr += "\n물때 : ${lunars?.get(position)}"
             for (i in 0 until tidetimes?.size!!) {
                 if (tidetimes?.get(i)?.tidetype.equals("고조")) {
-                    tempStr += "\n만조 : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
-                    highcnt++
+                    if(counta > 0) highStr += " / "
+                    highStr += "${tidetimes?.get(i)?.tidetime?.substring(11, 16)}"
+                    counta++
                 } else {
-                    tempStr += "\n간조 : ${tidetimes?.get(i)?.tidetime?.substring(11)} (${tidetimes?.get(i)?.tidelevel})"
-                    lowcnt++
+                    if(countb > 0) lowStr += " / "
+                    lowStr += "${tidetimes?.get(i)?.tidetime?.substring(11, 16)}"
+                    countb++
                 }
             }
+            tempStr += "\n만조시간 : "
+            tempStr += highStr
+            tempStr += "\n간조시간 : "
+            tempStr += lowStr
+            var now = false
             if(tempers?.size!! == 0) {
                 tempStr += "\n날씨 정보 없음"
             } else {
                 var upTemp : String = ""
                 var downTemp : String = ""
                 for(i in position * 2 until (position + 1) * 2) {
-                    if(tempers?.get(i)?.type == "TMX") upTemp += "\n최고 기온 : ${tempers?.get(i)?.temp}"
-                    if(tempers?.get(i)?.type == "TMN") downTemp += "\n최저 기온 : ${tempers?.get(i)?.temp}"
+                    if(tempers?.get(i)?.type == "TMX") upTemp += "${tempers?.get(i)?.temp?.toFloat()} °C"
+                    if(tempers?.get(i)?.type == "TMN") downTemp += "${tempers?.get(i)?.temp?.toFloat()} °C"
                     if(tempers?.get(i)?.type == "TMP") {
-                        tempStr += "\n현재 기온 : ${tempers?.get(i)?.temp}"
+                        tempStr += "\n현재기온 : ${tempers?.get(i)?.temp?.toFloat()} °C"
+                        now = true
                         break
                     }
                 }
-                tempStr += upTemp
-                tempStr += downTemp
+                if(!now) {
+                    tempStr += "\n최저/최고 기온 : "
+                    tempStr += downTemp
+                    tempStr += " / "
+                    tempStr += upTemp
+                }
             }
         }
-        Log.d("apitest", "${tempers?.size}")
-        Log.d("apitest", tempStr)
         binding.practiceItemDetail.text = tempStr
-        binding.practiceRoot.setOnClickListener { 
+        Log.d("google22", "${tempers?.size}")
+        Log.d("google22", tempStr)
+        binding.practiceRoot.setOnClickListener {
             // 보통 상세페이지와의 연결
         }
     }

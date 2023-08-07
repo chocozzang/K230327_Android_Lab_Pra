@@ -14,15 +14,10 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/practice_item"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16dp"
-            android:textStyle="bold"/>
-        <TextView
             android:id="@+id/practice_item_detail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"/>
     </LinearLayout>
 
 </LinearLayout>

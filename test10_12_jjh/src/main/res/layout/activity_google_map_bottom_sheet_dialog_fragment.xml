@@ -8,7 +8,8 @@
         android:layout_gravity="center"
         android:id="@+id/bottom_sheet"
         android:background="@drawable/bottom_spinner"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:backgroundTint="#303C4B">
 
         <TextView
             android:id="@+id/bottom_text"
@@ -16,18 +17,28 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:layout_gravity="center"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bottom_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"
             android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChart"
             android:layout_width="match_parent"
-            android:layout_height="200dp" />
+            android:layout_height="250dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myrecyclerView2"
             android:layout_width="wrap_content"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
         </androidx.recyclerview.widget.RecyclerView>

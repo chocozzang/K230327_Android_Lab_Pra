@@ -30,7 +30,6 @@ class APISlidingAdapter(val context : Context, val datas: MutableList<TideModel>
         Log.d("apitest", "뷰바인더홀더 ::: $position")
         val binding = (holder as APIViewHolder).binding
         val tide = datas?.get(position)
-        binding.practiceItem.text = "측정위치 : "+ tide?.result?.meta?.postid + " - " + tide?.result?.meta?.postname
         val tidetimes = tide?.result?.data
         var tempStr : String = ""
         if(tidetimes?.size!! == 0) {

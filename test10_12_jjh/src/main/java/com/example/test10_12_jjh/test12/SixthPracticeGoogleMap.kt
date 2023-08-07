@@ -26,7 +26,10 @@ import com.example.test10_12_jjh.model.TideModel
 import com.example.test10_12_jjh.model.TidePreModel
 import com.example.test10_12_jjh.model.WeatherModel
 import com.example.test10_12_jjh.model.temper
+import com.example.test10_12_jjh.model.wave
+import com.example.test10_12_jjh.model.wind
 import com.github.mikephil.charting.data.Entry
+import com.github.usingsky.calendar.KoreanLunarCalendar
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -267,6 +270,7 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         lateinit var apiTime : String
         lateinit var apiDay : String
         lateinit var apiDayFore : String
+
         val today = LocalDateTime.now()
         val apiTimeFore1 = today.minusDays(3L).format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "0600"
         Log.d("google22", apiTimeFore1)
@@ -331,6 +335,17 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val fifthDay = today.plusDays(4L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val sixthDay = today.plusDays(5L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
         val seventhDay = today.plusDays(6L).format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+
+        val firstLunar = checkLunar(firstDay.substring(0, 4).toInt(), firstDay.substring(4, 6).toInt(), firstDay.substring(6).toInt())
+        val secondLunar = checkLunar(secondDay.substring(0, 4).toInt(), secondDay.substring(4, 6).toInt(), secondDay.substring(6).toInt())
+        val thirdLunar = checkLunar(thirdDay.substring(0, 4).toInt(), thirdDay.substring(4, 6).toInt(), thirdDay.substring(6).toInt())
+        val fourthLunar = checkLunar(fourthDay.substring(0, 4).toInt(), fourthDay.substring(4, 6).toInt(), fourthDay.substring(6).toInt())
+        val fifthLunar = checkLunar(fifthDay.substring(0, 4).toInt(), fifthDay.substring(4, 6).toInt(), fifthDay.substring(6).toInt())
+        val sixthLunar = checkLunar(sixthDay.substring(0, 4).toInt(), sixthDay.substring(4, 6).toInt(), sixthDay.substring(6).toInt())
+        val seventhLunar = checkLunar(sixthDay.substring(0, 4).toInt(), seventhDay.substring(4, 6).toInt(), seventhDay.substring(6).toInt())
+
+        val lunarlist = listOf<String>(firstLunar, secondLunar, thirdLunar, fourthLunar, fifthLunar, sixthLunar, seventhLunar)
+
         val tideService = (applicationContext as APIApplication).tideService
         val tempService = (applicationContext as APIApplication).temperService
         val tidelist = mutableListOf<TideModel>()
@@ -347,11 +362,14 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
         val nowtide = tideService.getPreTide(apikey, mytag.obscode, firstDay, resulttype)
         val xy = mapToGrid(mytag.latitude, mytag.longtitude)
         val weather = tempService.getWeather(apikeyTemp2, 1, 900, resulttype, apiDay, apiTime, xy.x.toInt(), xy.y.toInt())
-        val forecast = tempService.getForecast(apiKeyFore2, 1, 10, resulttype, mytag.regId, apiTimeFore1)
+        //val forecast = tempService.getForecast(apiKeyFore2, 1, 10, resulttype, mytag.regId, apiTimeFore1)
         val forecast2 = tempService.getForecast(apiKeyFore2, 1, 10, resulttype, mytag.regId, apiTimeFore2)
         Log.d("google22", "$apiDay, $apiTime, ${xy.x.toInt()}, ${xy.y.toInt()}")
 
         val temperatures = mutableListOf<temper>()
+        val windlist = mutableListOf<wind>()
+        val windlist2 = mutableListOf<wind>()
+        val wavelist = mutableListOf<wave>()
         var levels = mutableListOf<Entry>()
         val scope = CoroutineScope(Dispatchers.Main)
         scope.launch {
@@ -402,6 +420,33 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                                         val temps = response.body()
                                                                                         val tempPres = temps?.response?.body?.items?.tempPre
                                                                                         var checknowtmp = true
+//                                                                                        var firstcheck = true
+//                                                                                        var secondcheck = true
+//                                                                                        var thirdcheck = true
+//                                                                                        var firstcheck2 = true
+//                                                                                        var secondcheck2 = true
+//                                                                                        var thirdcheck2 = true
+//                                                                                        var wavecheck1 = true
+//                                                                                        var wavecheck2 = true
+//                                                                                        var wavecheck3 = true
+//                                                                                        var windsizemin1 : Double = 0.0
+//                                                                                        var windsizemax1 : Double = 0.0
+//                                                                                        var winddirecmin1 : Int = 0
+//                                                                                        var winddirecmax1 : Int = 0
+//                                                                                        var wavesizemin1 : Double = 0.0
+//                                                                                        var wavesizemax1 : Double = 0.0
+//                                                                                        var windsizemin2 : Double = 0.0
+//                                                                                        var windsizemax2 : Double = 0.0
+//                                                                                        var winddirecmin2 : Int = 0
+//                                                                                        var winddirecmax2 : Int = 0
+//                                                                                        var wavesizemin2 : Double = 0.0
+//                                                                                        var wavesizemax2 : Double = 0.0
+//                                                                                        var windsizemin3 : Double = 0.0
+//                                                                                        var windsizemax3 : Double = 0.0
+//                                                                                        var winddirecmin3 : Int = 0
+//                                                                                        var winddirecmax3 : Int = 0
+//                                                                                        var wavesizemin3 : Double = 0.0
+//                                                                                        var wavesizemax3 : Double = 0.0
                                                                                         tempPres!!.forEach {
                                                                                             if(it.fcstDate == firstDay && it.category == "TMP" && checknowtmp) {
                                                                                                 temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
@@ -416,9 +461,101 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                                                 temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
                                                                                             if(it.fcstDate == thirdDay && it.category == "TMX")
                                                                                                 temperatures.add(temper(it.fcstDate, it.category, it.fcstValue))
-                                                                                            if(temperatures.size == 6) return@forEach
+
+//                                                                                            if(it.fcstDate == firstDay && it.category == "VEC") {
+//                                                                                                if(firstcheck) {
+//                                                                                                    windsizemin1 = it.fcstValue.toDouble()
+//                                                                                                    windsizemax1 = it.fcstValue.toDouble()
+//                                                                                                    firstcheck = false
+//                                                                                                } else {
+//                                                                                                    if(windsizemax1 < it.fcstValue.toDouble()) windsizemax1 = it.fcstValue.toDouble()
+//                                                                                                    if(windsizemin1 > it.fcstValue.toDouble()) windsizemin1 = it.fcstValue.toDouble()
+//                                                                                                }
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == firstDay && it.category == "WSD") {
+//                                                                                                if(firstcheck2) {
+//                                                                                                    winddirecmin1 = it.fcstValue.toInt()
+//                                                                                                    winddirecmax1 = it.fcstValue.toInt()
+//                                                                                                    firstcheck2 = false
+//                                                                                                } else {
+//                                                                                                    if(winddirecmax1 < it.fcstValue.toInt()) winddirecmax1 = it.fcstValue.toInt()
+//                                                                                                    if(winddirecmin1 > it.fcstValue.toInt()) winddirecmin1 = it.fcstValue.toInt()
+//                                                                                                }
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == secondDay && it.category == "VEC") {
+//                                                                                                if(secondcheck) {
+//                                                                                                    windsizemin2 = it.fcstValue.toDouble()
+//                                                                                                    windsizemax2 = it.fcstValue.toDouble()
+//                                                                                                    secondcheck = false
+//                                                                                                } else {
+//                                                                                                    if(windsizemax2 < it.fcstValue.toDouble()) windsizemax2 = it.fcstValue.toDouble()
+//                                                                                                    if(windsizemin2 > it.fcstValue.toDouble()) windsizemin2 = it.fcstValue.toDouble()
+//                                                                                                }
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == secondDay && it.category == "WSD") {
+//                                                                                                if(secondcheck2) {
+//                                                                                                    winddirecmin2 = it.fcstValue.toInt()
+//                                                                                                    winddirecmax2 = it.fcstValue.toInt()
+//                                                                                                    secondcheck2 = false
+//                                                                                                } else {
+//                                                                                                    if(winddirecmax2 < it.fcstValue.toInt()) winddirecmax2 = it.fcstValue.toInt()
+//                                                                                                    if(winddirecmin2 > it.fcstValue.toInt()) winddirecmin2 = it.fcstValue.toInt()
+//                                                                                                }
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == thirdDay && it.category == "VEC") {
+//                                                                                                if(thirdcheck) {
+//                                                                                                    windsizemin3 = it.fcstValue.toDouble()
+//                                                                                                    windsizemax3 = it.fcstValue.toDouble()
+//                                                                                                    thirdcheck = false
+//                                                                                                } else {
+//                                                                                                    if(windsizemax3 < it.fcstValue.toDouble()) windsizemax3 = it.fcstValue.toDouble()
+//                                                                                                    if(windsizemin3 > it.fcstValue.toDouble()) windsizemin3 = it.fcstValue.toDouble()
+//                                                                                                }
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == thirdDay && it.category == "WSD") {
+//                                                                                                if(thirdcheck2) {
+//                                                                                                    winddirecmin3 = it.fcstValue.toInt()
+//                                                                                                    winddirecmax3 = it.fcstValue.toInt()
+//                                                                                                    thirdcheck2 = false
+//                                                                                                } else {
+//                                                                                                    if(winddirecmax3 < it.fcstValue.toInt()) winddirecmax3 = it.fcstValue.toInt()
+//                                                                                                    if(winddirecmin3 > it.fcstValue.toInt()) winddirecmin3 = it.fcstValue.toInt()
+//                                                                                                }
+//                                                                                            }
+
+//                                                                                            if(it.fcstDate == firstDay && it.category == "WAV") {
+//                                                                                                wavelist.add(wave(it.fcstDate, it.category, it.fcstValue))
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == secondDay && it.category == "WAV") {
+//                                                                                                wavelist.add(wave(it.fcstDate, it.category, it.fcstValue))
+//                                                                                            }
+//
+//                                                                                            if(it.fcstDate == thirdDay && it.category == "WAV") {
+//                                                                                                wavelist.add(wave(it.fcstDate, it.category, it.fcstValue))
+//                                                                                            }
+
+                                                                                            if(temperatures.size == 6 && windlist.size == 6) return@forEach
                                                                                         }
-                                                                                        Log.d("google22", "yy")
+                                                                                        Log.d("google22", "yy22")
+//                                                                                        windlist.add(wind(firstDay, "VECMIN", windsizemin1.toString()))
+//                                                                                        windlist.add(wind(firstDay, "VECMAX", windsizemax1.toString()))
+//                                                                                        windlist.add(wind(secondDay, "VECMIN", windsizemin2.toString()))
+//                                                                                        windlist.add(wind(secondDay, "VECMAX", windsizemax2.toString()))
+//                                                                                        windlist.add(wind(thirdDay, "VECMIN", windsizemin3.toString()))
+//                                                                                        windlist.add(wind(thirdDay, "VECMAX", windsizemax3.toString()))
+//                                                                                        windlist2.add(wind(firstDay, "WSDMIN", winddirecmin1.toString()))
+//                                                                                        windlist2.add(wind(firstDay, "WSDMAX", winddirecmax1.toString()))
+//                                                                                        windlist2.add(wind(secondDay, "WSDMIN", winddirecmin2.toString()))
+//                                                                                        windlist2.add(wind(secondDay, "WSDMAX", winddirecmax2.toString()))
+//                                                                                        windlist2.add(wind(thirdDay, "WSDMIN", winddirecmin2.toString()))
+//                                                                                        windlist2.add(wind(thirdDay, "WSDMAX", winddirecmax2.toString()))
+
                                                                                         forecast2.enqueue(object : Callback<ForecastModel> {
                                                                                             override fun onResponse(call: Call<ForecastModel>, response: Response<ForecastModel>) {
                                                                                                 val fore = response.body()
@@ -432,7 +569,8 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
                                                                                                 temperatures.add(temper(seventhDay, "TMN", forecasts?.get(0)?.taMin6!!))
                                                                                                 temperatures.add(temper(seventhDay, "TMX", forecasts?.get(0)?.taMax6!!))
                                                                                                 Log.d("google22", "$temperatures")
-                                                                                                val bottomsheetdialog = BottomSheetDialog(tidelist, levels, temperatures, mytag.obsname)
+                                                                                                Log.d("google22", "$lunarlist")
+                                                                                                val bottomsheetdialog = BottomSheetDialog(tidelist, levels, temperatures, mytag.obsname, lunarlist)
                                                                                                 bottomsheetdialog.show(supportFragmentManager, "bottomsheetdialog")
                                                                                             }
                                                                                             override fun onFailure(call: Call<ForecastModel>, t: Throwable
@@ -496,6 +634,57 @@ class SixthPracticeGoogleMap : AppCompatActivity(), OnMapReadyCallback {
     /**
      * Gets the current location of the device, and positions the map's camera.
      */
+
+    fun checkLunar(year : Int, month : Int, day : Int) : String{
+        var checkYoon : Boolean = false
+
+        if(year % 4 == 0) {
+            if(year % 100 == 0) {
+                checkYoon = year % 400 == 0
+            }
+            checkYoon = true
+        }
+        val nowCal = KoreanLunarCalendar.getInstance()
+        nowCal.setLunarDate(year, month, day, checkYoon)
+        val tempLunar = nowCal.solarIsoFormat
+        val checkMoolDDae = tempLunar.substring(8).toInt()
+        var returnVal : String = ""
+        when(checkMoolDDae) {
+            1 -> returnVal = "7물"
+            2 -> returnVal = "8물"
+            3 -> returnVal = "9물"
+            4 -> returnVal = "10물"
+            5 -> returnVal = "11물"
+            6 -> returnVal = "12물"
+            7 -> returnVal = "13물"
+            8 -> returnVal = "14물(조금)"
+            9 -> returnVal = "15물(무시)"
+            10 -> returnVal = "1물"
+            11 -> returnVal = "2물"
+            12 -> returnVal = "3물"
+            13 -> returnVal = "4물"
+            14 -> returnVal = "5물"
+            15 -> returnVal = "6물"
+            16 -> returnVal = "7물"
+            17 -> returnVal = "8물"
+            18 -> returnVal = "9물"
+            19 -> returnVal = "10물"
+            20 -> returnVal = "11물"
+            21 -> returnVal = "12물"
+            22 -> returnVal = "13물"
+            23 -> returnVal = "14물(조금)"
+            24 -> returnVal = "15물(무시)"
+            25 -> returnVal = "1물"
+            26 -> returnVal = "2물"
+            27 -> returnVal = "3물"
+            28 -> returnVal = "4물"
+            29 -> returnVal = "5물"
+            30 -> returnVal = "6물"
+        }
+
+        return returnVal
+    }
+
 
     fun mapToGrid(lat : Double, lon : Double) : XYGrid{
         var RE = 6371.00877 // 지구 반경(km)

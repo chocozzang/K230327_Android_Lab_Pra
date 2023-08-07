@@ -23,7 +23,7 @@ class AdapterPractice(val datas : MutableList<String>) : RecyclerView.Adapter<Re
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as ViewHolderPractice).binding
-        binding.practiceItem.text = datas[position]
+        //binding.vpracticeItem.text = datas[position]
         binding.practiceRoot.setOnClickListener { 
             // 보통 상세페이지와의 연결
         }
