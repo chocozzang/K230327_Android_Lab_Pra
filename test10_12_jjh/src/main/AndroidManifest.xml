@@ -32,8 +32,14 @@
             android:exported="false" />
         <activity
             android:name=".test12.SixthPracticeTeachableMachine"
-            android:exported="true" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -83,11 +89,6 @@
         <activity
             android:name=".test12.PracticeActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".test12.MainActivity389"

@@ -21,6 +21,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test10_12_jjh.adapter.ConfidenceAdpater
 import com.example.test10_12_jjh.databinding.ActivitySixthPracticeTeachableMachineBinding
 import com.example.test10_12_jjh.ml.Model
 import org.tensorflow.lite.DataType
@@ -37,12 +38,13 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
     var picture: Button? = null
     var imageSize = 224
     lateinit var binding : ActivitySixthPracticeTeachableMachineBinding
+    lateinit var tmAdpater : ConfidenceAdpater
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySixthPracticeTeachableMachineBinding.inflate(layoutInflater)
         setContentView(binding.root)
         result = binding.result
-        confidence = binding.confidence
+        //confidence = binding.confidence
         imageView = binding.imageView
 
         //gallery request launcher..................
@@ -50,7 +52,15 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult())
         {
             try {
-
+                var image = it!!.data!!.data!!
+                var inputStream = contentResolver.openInputStream(image)
+                val image2 = BitmapFactory.decodeStream(inputStream, null, null)
+                val dimension = Math.min(image2!!.width, image2!!.height)
+                var thumbnail = ThumbnailUtils.extractThumbnail(image2, dimension, dimension)
+                imageView!!.setImageBitmap(image2)
+                thumbnail = Bitmap.createScaledBitmap(image2, imageSize, imageSize, false)
+                classifyImage(thumbnail)
+                /*
                 val calRatio = calculateInSampleSize(
                     it.data!!.data!!,
                     //resources.getDimensionPixelSize(com.example.test10_12_jjh.R.dimen.imgSize),
@@ -67,11 +77,11 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
                 inputStream = null
                 Log.d("test16", "image convert start")
                 bitmap?.let {
-                    //binding.imageView.setImageBitmap(bitmap)
+                    binding.imageView.setImageBitmap(bitmap)
                     classifyImage(bitmap)
                 } ?: let{
                     Log.d("test16", "bitmap null")
-                }
+                } */
             }catch (e: Exception){
                 e.printStackTrace()
             }
@@ -101,18 +111,19 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
     fun classifyImage(image: Bitmap?) {
         try {
             val model: Model = Model.newInstance(applicationContext)
-            Log.d("test16", "Classify")
+            //Log.d("test16", "Classify")
             // Creates inputs for reference.
-            val inputFeature0 =
-                TensorBuffer.createFixedSize(intArrayOf(1, 224, 224, 3), DataType.FLOAT32)
+            val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, 224, 224, 3), DataType.FLOAT32)
             val byteBuffer = ByteBuffer.allocateDirect(4 * imageSize * imageSize * 3)
             byteBuffer.order(ByteOrder.nativeOrder())
-            Log.d("test16", "Classify2")
+            //Log.d("test16", "Classify2")
             // get 1D array of 224 * 224 pixels in image
             val intValues = IntArray(imageSize * imageSize)
+            //Log.d("test16", "${intValues.size}")
+            //Log.d("test16", "${image?.width}, ${image?.height}")
             //for(x in intValues) Log.d("test16", "$x\n")
             image!!.getPixels(intValues, 0, image.width, 0, 0, image.width, image.height)
-            Log.d("test16", "Classify3")
+            //Log.d("test16", "Classify3")
             // iterate over pixels and extract R, G, and B values. Add to bytebuffer.
             var pixel = 0
             for (i in 0 until imageSize) {
@@ -124,7 +135,7 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
                 }
             }
             inputFeature0.loadBuffer(byteBuffer)
-            Log.d("test16", "Classify4")
+            //Log.d("test16", "Classify4")
             // Runs model inference and gets result.
             val outputs: Model.Outputs = model.process(inputFeature0)
             val outputFeature0: TensorBuffer = outputs.getOutputFeature0AsTensorBuffer()
@@ -138,16 +149,20 @@ class SixthPracticeTeachableMachine : AppCompatActivity() {
                     maxPos = i
                 }
             }
-            Log.d("test16", "Classify5")
+            //Log.d("test16", "Classify5")
             val classes = arrayOf("농어", "돌돔", "참돔", "감성돔", "벵에돔", "갈치", "우럭", "고등어", "광어", "망둥어", "전어", "삼치", "볼락", "도다리")
             result!!.text = classes[maxPos]
             var s = ""
+            var strings = mutableListOf<String>()
             for (i in classes.indices) {
-                s += String.format("%s: %.1f%%\n", classes[i], confidences[i] * 100)
+                strings.add(String.format("%s: %.1f%%" , classes[i], confidences[i] * 100))
+                //s += String.format("%s: %.1f%%\n", classes[i], confidences[i] * 100)
             }
-            confidence!!.text = s
-            Log.d("test16", "$s")
+            //confidence!!.text = s
+            Log.d("test16", "$strings")
             binding.imageView.setImageBitmap(image)
+            tmAdpater = ConfidenceAdpater(strings)
+            binding.tmRecyclerView.adapter = tmAdpater
             // Releases model resources if no longer used.
             model.close()
         } catch (e: IOException) {
